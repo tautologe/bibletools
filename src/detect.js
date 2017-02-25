@@ -1,4 +1,4 @@
-export default (text) => {
+const _createLinkDetectorRegexp = () => {
     const books = [
         ['Gen','Genesis','1. Mo','1 Mo','1. Mose', '1 Mose'],
         ['Ex','Exodus','2. Mo','2 Mo','2. Mose', '2 Mose'],
@@ -78,5 +78,9 @@ export default (text) => {
     const optionaFollowing = 'f?f?';
 
     const re = new RegExp(`${bookRegExpString}\.? ${chapterWithOptionalVerse}${optionalRange}${optionaFollowing}`, 'g');
-    return text.match(re) || [];
-}
+    return re;
+};
+
+const linkDetectorRegexp = _createLinkDetectorRegexp();
+
+export default (text) => text.match(linkDetectorRegexp) || [];
