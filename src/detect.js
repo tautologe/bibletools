@@ -8,18 +8,18 @@ const _createLinkDetectorRegexp = () => {
         ['Jos', 'Josua'],
         ['Ri', 'Richter'],
         ['Rut', 'Ruth'],
-        ['1 Sam'],
-        ['2 Sam'],
-        ['1 Kön'],
-        ['2 Kön'],
-        ['1 Chr'],
-        ['2 Chr'],
+        ['1 Sam', '1. Samuel', '1. Sam', '1 Samuel'],
+        ['2 Sam', '2. Samuel', '2. Sam', '2 Samuel'],
+        ['1 Kön', '1 Könige', '1. Könige', '1. Kön', '1 Kö', '1. Kö'],
+        ['2 Kön', '2 Könige', '2. Könige', '2. Kön', '2 Kö', '2. Kö'],
+        ['1 Chr', '1. Chronik', '1. Chr', '1 Chronik'],
+        ['2 Chr', '2. Chronik', '2. Chr', '2 Chronik'],
         ['Esra'],
         ['Neh'],['Tob'],['Jdt'],
         ['Est'],['1 Makk'], ['2 Makk'],
         ['Ijob','Hiob'],
         ['Ps','Psalm','Psalmen','Psalter'],
-        ['Spr'],
+        ['Spr', 'Sprüche'],
         ['Koh','Kohelet','Prediger','Pred'],
         ['Hld'],['Weish'],['Sir'],
         ['Jes'],
@@ -72,12 +72,13 @@ const _createLinkDetectorRegexp = () => {
     const escapeRegExp = (str) => str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 
     // regexp components
+    const optionalSpaces = '\\s*';
     const bookRegExpString = `(${flatten(books).map(escapeRegExp).join('|')})`;
-    const chapterWithOptionalVerse = '[0-9]{1,3}(,[0-9]{1,3})?';
-    const optionalRange = '(-[0-9]{1,3}(,[0-9]{1,3})?)?';
+    const chapterWithOptionalVerse = `[0-9]{1,3}(,${optionalSpaces}[0-9]{1,3})?`;
+    const optionalRange = `(${optionalSpaces}-${optionalSpaces}[0-9]{1,3}(,${optionalSpaces}[0-9]{1,3})?)?`;
     const optionaFollowing = 'f?f?';
 
-    const re = new RegExp(`${bookRegExpString}\.? ${chapterWithOptionalVerse}${optionalRange}${optionaFollowing}`, 'g');
+    const re = new RegExp(`${bookRegExpString}\.?${optionalSpaces}${chapterWithOptionalVerse}${optionalRange}${optionaFollowing}`, 'g');
     return re;
 };
 
