@@ -1,0 +1,26 @@
+<html>
+    <meta charset="utf-8">
+    <style>
+        #content { width: 700px; border: 1px dashed green; }
+        aside { position: fixed; top: 5px; right: 5px; }
+        #detectbutton { cursor: pointer; }
+        #results { border: 1px solid red; width: 300px; min-height: 200px; }
+    </style>
+<body>
+    <aside>
+        <a id="detectbutton">Bibelstellen erkennen</a>
+        <div id="results"></div>
+    </aside>
+    <div contentEditable="true" id="content">
+      Hier Text einfügen
+    </div>
+    
+    <script src="../dist/bundle.js"></script>
+    <script>
+        document.getElementById('detectbutton').onclick = () => {
+            const references = window.detect.default(document.getElementById('content').innerText);
+            document.getElementById('results').innerHTML = references.join('<br />');
+        };
+    </script>
+</body>
+</html>
