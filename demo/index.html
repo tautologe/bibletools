@@ -1,19 +1,30 @@
 <html>
     <meta charset="utf-8">
     <style>
-        #content { width: 700px; border: 1px dashed green; }
-        aside { position: fixed; top: 5px; right: 5px; }
-        #detectbutton { cursor: pointer; }
+        main { padding: 10px; max-width: 1200px; margin: auto; }
+        #content { width: auto; }
+        #user-input { max-width: 700px; border: 1px dashed green; padding: 20px; }
+        #detectbutton { cursor: pointer; border: 1px solid grey; padding: 4px; background: #fafafa; }
         #results { border: 1px solid red; width: 300px; min-height: 200px; }
     </style>
 <body>
-    <aside>
-        <a id="detectbutton">Bibelstellen erkennen</a>
-        <div id="results"></div>
-    </aside>
-    <div contentEditable="true" id="content">
-      Hier Text einfügen
-    </div>
+    <main>
+        <div id="content">
+            <h1>Automatische Bibelstellenerkennung (Demo)</h1>
+            <p>Hier Text einfügen, der Bibelstellen enthält:</p>
+            <div contentEditable="true" id="user-input">
+            Bibelstellen können einzelne Verse referenzieren, wie 1. Mo 4, 23 oder mehrere Verse umfassen Jos 4, 12-20. 
+            Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1 - 2,4.
+            Mal steht hinter dem Buch ein Punkt Röm. 4,1 oder es fehlt das Leerzeichen und kein Vers angegeben Offb22.
+            <br /><br />
+            Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.5.7-9.25
+            </div>
+        </div>
+        <div id="detection">
+            <div><a id="detectbutton">Bibelstellen erkennen</a></div>
+            <div id="results"></div>
+        </div>
+    </main>
     
     <script src="../dist/bundle.js"></script>
     <script>
