@@ -45,6 +45,14 @@ describe('link detector', function () {
             it('seperated with points', function () {
                 assert.deepEqual(detect('Es steht in Gen 3,12.14.16 geschrieben'), ['Gen 3,12.14.16']);
             });
+
+            it('and ranges seperated with points', function () {
+                assert.deepEqual(detect('Es steht in Gen 3,12.14-16.21 geschrieben'), ['Gen 3,12.14-16.21']);
+            });
+
+            it('spaces after dots will be interpreted as the end of the sentence', function () {
+                assert.deepEqual(detect('Es steht in Gen 3,12. 14-16.21 geschrieben'), ['Gen 3,12']);
+            });
         })
     });
 
