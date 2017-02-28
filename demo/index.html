@@ -7,7 +7,7 @@
         #content { width: auto; }
         #user-input { max-width: 700px; border: 1px dashed green; padding: 20px; }
         #detectbutton { cursor: pointer; border: 1px solid grey; padding: 4px; background: #fafafa; }
-        #results { border: 1px solid red; width: 300px; min-height: 200px; }
+        #results { border: 1px solid red; width: 700px; min-height: 200px; }
     </style>
 <body>
     <main>
@@ -16,10 +16,12 @@
             <p>Hier Text anpassen/eingeben, der Bibelstellen enthält:</p>
             <div contentEditable="true" id="user-input">
             Bibelstellen können einzelne Verse referenzieren, wie 1. Mo 4, 23 oder mehrere Verse umfassen Jos 4, 12-20. 
-            Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1 - 2,4.
+            Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1,15 - 2,4.
             Mal steht hinter dem Buch ein Punkt Röm. 4,1 oder es fehlt das Leerzeichen und kein Vers angegeben Offb22.
             <br /><br />
-            Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.5.7-9.25
+            Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.5.7-9.25.
+            Zeilenumbrüche Gen 2,<br />
+            23 sind kein Problem.
             </div>
         </div>
         <div id="detection">
@@ -32,6 +34,7 @@
                 <li>Nur deutsche Notationen und Buchnamen werden erkannt</li>
                 <li>Nicht alle Varianten der Buchnamen werden erkannt.</li>
                 <li>Es erfolgt keine Prüfung ob der Vers/das Kapitel wirklich existiert (z.B. 1. Mo 4,99; Obd 2,1)</li>
+                <li>Wenn man dem Link folgt: bibleserver.com erkennt beim Markieren nicht alle Varianten der Versangabe</li>
             </ul>
         </div>
     </main>
@@ -40,7 +43,19 @@
     <script>
         document.getElementById('detectbutton').onclick = () => {
             const references = window.detect.default(document.getElementById('content').innerText);
-            document.getElementById('results').innerHTML = references.join('<br />');
+            if (references.length) {
+                const links = references.map((reference) => {
+                    const sanitizedReference = reference.replace(/\s/g, '');
+                    return `<p>${reference}:
+                        <small><a href="https://bibleserver.com/text/LUT/${sanitizedReference}" target="_blank">
+                            Öffne auf bibleserver.com
+                        </a></small></p>`
+                });
+                document.getElementById('results').innerHTML = links.join('');
+            } else {
+                document.getElementById('results').innerHTML = "Keine Bibelstellen erkannt.";
+            }
+            
         };
     </script>
 </body>
