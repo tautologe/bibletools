@@ -40,6 +40,12 @@ describe('link detector', function () {
                 assert.deepEqual(detect('Es steht in Gen 3, 12 - 4, 2 geschrieben'), ['Gen 3, 12 - 4, 2']);
             });
         });
+
+        describe('multiple verses', function () {
+            it('seperated with points', function () {
+                assert.deepEqual(detect('Es steht in Gen 3,12.14.16 geschrieben'), ['Gen 3,12.14.16']);
+            });
+        })
     });
 
     describe('should support multiline strings', function () {
