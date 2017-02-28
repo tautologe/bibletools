@@ -21,7 +21,7 @@ const _createLinkDetectorRegexp = () => {
         ['Ps','Psalm','Psalmen','Psalter'],
         ['Spr', 'Sprüche'],
         ['Koh','Kohelet','Prediger','Pred'],
-        ['Hld', 'Hoheslied'],           ['Weish'],['Sir'],
+        ['Hld', 'Hoheslied'],           ['Weish', 'Weisheit'],['Sir', 'Sirach'],
         ['Jes', 'Jesaja'],
         ['Jer', 'Jeremia'],
         ['Klgl', 'Klagelieder'],        ['Bar', 'Baruch'],
@@ -44,7 +44,7 @@ const _createLinkDetectorRegexp = () => {
         ['Lk','Lukas'],
         ['Joh', 'Johannes'],
         ['Apg', 'Apostelgeschichte'],
-        ['Röm', 'Römer'],
+        ['Röm', 'Römer', 'Rö'],
         ['1 Kor', '1. Kor', '1. Korinther', '1. Korintherbrief'],
         ['2 Kor', '2. Kor', '2. Korinther', '2. Korintherbrief'],
         ['Gal', 'Galater', 'Galaterbrief'],
@@ -74,11 +74,14 @@ const _createLinkDetectorRegexp = () => {
     // regexp components
     const optionalSpaces = '\\s*';
     const bookRegExpString = `(${flatten(books).map(escapeRegExp).join('|')})`;
+    // TODO additional consistence check: maximum chapter number is (Psalm) 150.
     const chapter = `[0-9]{1,3}`;
-    // const chapterWithOptionalVerse = `${chapter}(,${optionalSpaces}[0-9]{1,3})?`;
-    const optionalRange = `(${optionalSpaces}-${optionalSpaces}[0-9]{1,3}(,${optionalSpaces}[0-9]{1,3})?)?`;
+    // TODO additional consistence check: maximum verse number is (Psalm 119),176.
+    const verse = `[0-9]{1,3}`;
+    const optionalRange = `(${optionalSpaces}-${optionalSpaces}${verse}(,${optionalSpaces}${verse})?)?`;
     const optionaFollowing = 'f?f?';
-    const verseOrRange = `[0-9]{1,3}${optionalRange}${optionaFollowing}`;
+    const verseOrRange = `${verse}${optionalRange}${optionaFollowing}`;
+    // optional: verses seperated by '.' like in Gen 1,2.4.6-8.10
     const oneOrMoreVerses = `${verseOrRange}(\.${verseOrRange})*`;
     const re = new RegExp(`${bookRegExpString}\.?${optionalSpaces}${chapter}${optionalRange}(,${optionalSpaces}${oneOrMoreVerses})?`, 'g');
     return re;

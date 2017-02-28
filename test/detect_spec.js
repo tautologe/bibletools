@@ -5,6 +5,7 @@ describe('link detector', function () {
     describe('should detect', function () {
         it('simple chapters', function () {
             assert.deepEqual(detect('Es steht in Gen 3 geschrieben'), ['Gen 3']);
+            assert.deepEqual(detect('Es steht in Ex 12 geschrieben'), ['Ex 12']);
         });
 
         it('simple chapters with verses', function () {
