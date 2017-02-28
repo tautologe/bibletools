@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <style>
         main { padding: 10px; max-width: 1200px; margin: auto; }
         #content { width: auto; }
@@ -11,7 +13,7 @@
     <main>
         <div id="content">
             <h1>Automatische Bibelstellenerkennung (Demo)</h1>
-            <p>Hier Text einfügen, der Bibelstellen enthält:</p>
+            <p>Hier Text anpassen/eingeben, der Bibelstellen enthält:</p>
             <div contentEditable="true" id="user-input">
             Bibelstellen können einzelne Verse referenzieren, wie 1. Mo 4, 23 oder mehrere Verse umfassen Jos 4, 12-20. 
             Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1 - 2,4.
@@ -24,9 +26,17 @@
             <div><a id="detectbutton">Bibelstellen erkennen</a></div>
             <div id="results"></div>
         </div>
+        <div>
+            <p>Bekannte Probleme:</p>
+            <ul>
+                <li>Nur deutsche Notationen und Buchnamen werden erkannt</li>
+                <li>Nicht alle Varianten der Buchnamen werden erkannt.</li>
+                <li>Es erfolgt keine Prüfung ob der Vers/das Kapitel wirklich existiert (z.B. 1. Mo 4,99; Obd 2,1)</li>
+            </ul>
+        </div>
     </main>
     
-    <script src="../dist/bundle.js"></script>
+    <script src="bundle.js"></script>
     <script>
         document.getElementById('detectbutton').onclick = () => {
             const references = window.detect.default(document.getElementById('content').innerText);
