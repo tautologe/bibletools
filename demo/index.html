@@ -5,28 +5,18 @@
     <title>Automatische Bibelstellenerkennung (Demo)</title>
     <style>
         main { padding: 10px; max-width: 1200px; margin: auto; }
-        #user-input { border: 1px dashed green; }
-        #results { border: 1px dashed red; }
-        #booknames { font-size: 0.6em; overflow-wrap: break-word; }
-
-        .half-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
+        .half-container { display: flex; flex-wrap: wrap; }
         .half-box {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            flex: 1; display: flex; flex-direction: column;
             justify-content: top;
             margin: 20px;
-            min-width: 380px;
+            min-width: 380px; max-width: 550px;
         }
-
-        .half-box > div {
-            padding: 20px;
-            max-width: 550px;
-        }
+        .half-box > div { padding: 20px; }
+        #user-input { border: 1px dashed green; }
+        #results { border: 1px dashed red; }
+        #results:empty:not(:focus):before{content:attr(data-defaulttext)}
+        #booknames { font-size: 0.6em; overflow-wrap: break-word; }
     </style>
 <body>
     <main>
@@ -46,7 +36,7 @@
             </div>
             <div id="detection" class="half-box">
                 <p>Erkannte Bibelstellen:</p>
-                <div id="results"></div>
+                <div id="results" data-defaulttext="Keine Bibelstellen erkannt."></div>
             </div>
         </div>
         <div>
@@ -64,7 +54,6 @@
     
     <script src="bundle.js"></script>
     <script>
-        document.getElementById('booknames').innerHTML = window.detect._booknames.join(',');
         const referenceTemplate = (reference) => {
             const sanitizedReference = reference.replace(/\s/g, '');
             return `<p>${reference}:
@@ -75,16 +64,12 @@
         
         const detectAndDisplayBibleReferences = () => {
             const references = window.detect.detect(document.getElementById('content').innerText);
-            if (references.length) {
-                const links = references.map((reference) => referenceTemplate(reference));
-                document.getElementById('results').innerHTML = links.join('');
-            } else {
-                document.getElementById('results').innerHTML = "Keine Bibelstellen erkannt.";
-            }
-            
+            const links = references.map((reference) => referenceTemplate(reference));
+            document.getElementById('results').innerHTML = links.join('');
         };
         detectAndDisplayBibleReferences();
         document.getElementById('user-input').addEventListener("input", detectAndDisplayBibleReferences);
+        document.getElementById('booknames').innerHTML = window.detect._booknames.join(',');
     </script>
 </body>
 </html>
