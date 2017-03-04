@@ -1,4 +1,4 @@
-import detect from '../src/detect';
+import {detect} from '../src/detect';
 import assert from 'assert';
 
 describe('link detector', function () {
@@ -79,6 +79,20 @@ describe('link detector', function () {
 
         it('umlaut', function () {
             assert.deepEqual(detect('Es steht\n in 1. Kön 3,12 geschrieben'), ['1. Kön 3,12']);
+        });
+    });
+
+    describe('should not detect', function () {
+        it('numbers after spaces', function () {
+            assert.deepEqual(detect('Es steht in 1. Mo. 6,9 12 geschrieben'), ['1. Mo. 6,9']);
+        });
+
+        it('chapters with more than three digits', function () {
+            assert.deepEqual(detect('Es steht in Ps. 1234 geschrieben'), []);
+        });
+
+        it('verses with more than three digits', function () {
+            assert.deepEqual(detect('Es steht in 1. Mo. 6,9121 geschrieben'), ['1. Mo. 6']);
         });
     });
 });

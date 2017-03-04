@@ -2,61 +2,89 @@
 <html>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Automatische Bibelstellenerkennung (Demo)</title>
     <style>
         main { padding: 10px; max-width: 1200px; margin: auto; }
-        #content { width: auto; }
-        #user-input { max-width: 700px; border: 1px dashed green; padding: 20px; }
-        #detectbutton { cursor: pointer; border: 1px solid grey; padding: 4px; background: #fafafa; }
-        #results { border: 1px solid red; width: 700px; min-height: 200px; }
+        #user-input { border: 1px dashed green; }
+        #results { border: 1px dashed red; }
+        #booknames { font-size: 0.6em; overflow-wrap: break-word; }
+
+        .half-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .half-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: top;
+            margin: 20px;
+            min-width: 380px;
+        }
+
+        .half-box > div {
+            padding: 20px;
+            max-width: 550px;
+        }
     </style>
 <body>
     <main>
-        <div id="content">
-            <h1>Automatische Bibelstellenerkennung (Demo)</h1>
-            <p>Hier Text anpassen/eingeben, der Bibelstellen enthält:</p>
-            <div contentEditable="true" id="user-input">
-            Bibelstellen können einzelne Verse referenzieren, wie 1. Mo 4, 23 oder mehrere Verse umfassen Jos 4, 12-20. 
-            Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1,15 - 2,4.
-            Mal steht hinter dem Buch ein Punkt Röm. 4,1 oder es fehlt das Leerzeichen und kein Vers angegeben Offb22.
-            <br /><br />
-            Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.5.7-9.25.
-            Zeilenumbrüche Gen 2,<br />
-            23 sind kein Problem.
+        <h1>Automatische Bibelstellenerkennung (Demo)</h1>
+        <div class="half-container">
+            <div id="content" class="half-box">
+                <p>Hier Text anpassen/eingeben, der Bibelstellen enthält:</p>
+                <div contentEditable="true" id="user-input">
+                Bibelstellen können einzelne Verse referenzieren, wie 1. Mo 4, 23 oder mehrere Verse umfassen Jos 4, 12-20. 
+                Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1,15 - 2,4.
+                Mal steht hinter dem Buch ein Punkt Röm. 4,1 oder es fehlt das Leerzeichen und kein Vers angegeben Offb22.
+                <br /><br />
+                Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.5.7-9.25.
+                Zeilenumbrüche Gen 2,<br />
+                23 sind kein Problem.
+                </div>
+            </div>
+            <div id="detection" class="half-box">
+                <p>Erkannte Bibelstellen:</p>
+                <div id="results"></div>
             </div>
         </div>
-        <div id="detection">
-            <div><a id="detectbutton">Bibelstellen erkennen</a></div>
-            <div id="results"></div>
-        </div>
         <div>
-            <p>Bekannte Probleme:</p>
+            <p>Beschränkungen:</p>
             <ul>
                 <li>Nur deutsche Notationen und Buchnamen werden erkannt</li>
-                <li>Nicht alle Varianten der Buchnamen werden erkannt.</li>
+                <li>Nicht alle Varianten der Buchnamen werden erkannt (siehe unten)</li>
                 <li>Es erfolgt keine Prüfung ob der Vers/das Kapitel wirklich existiert (z.B. 1. Mo 4,99; Obd 2,1)</li>
                 <li>Wenn man dem Link folgt: bibleserver.com erkennt beim Markieren nicht alle Varianten der Versangabe</li>
             </ul>
+            <h3>Bekannte Buchnamen:</h3>
+            <p id="booknames"></p>
         </div>
     </main>
     
     <script src="bundle.js"></script>
     <script>
-        document.getElementById('detectbutton').onclick = () => {
-            const references = window.detect.default(document.getElementById('content').innerText);
+        document.getElementById('booknames').innerHTML = window.detect._booknames.join(',');
+        const referenceTemplate = (reference) => {
+            const sanitizedReference = reference.replace(/\s/g, '');
+            return `<p>${reference}:
+            <small><a href="https://bibleserver.com/text/LUT/${sanitizedReference}" target="_blank">
+                Öffne auf bibleserver.com
+            </a></small></p>`;
+        }
+        
+        const detectAndDisplayBibleReferences = () => {
+            const references = window.detect.detect(document.getElementById('content').innerText);
             if (references.length) {
-                const links = references.map((reference) => {
-                    const sanitizedReference = reference.replace(/\s/g, '');
-                    return `<p>${reference}:
-                        <small><a href="https://bibleserver.com/text/LUT/${sanitizedReference}" target="_blank">
-                            Öffne auf bibleserver.com
-                        </a></small></p>`
-                });
+                const links = references.map((reference) => referenceTemplate(reference));
                 document.getElementById('results').innerHTML = links.join('');
             } else {
                 document.getElementById('results').innerHTML = "Keine Bibelstellen erkannt.";
             }
             
         };
+        detectAndDisplayBibleReferences();
+        document.getElementById('user-input').addEventListener("input", detectAndDisplayBibleReferences);
     </script>
 </body>
 </html>
