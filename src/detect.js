@@ -67,33 +67,78 @@ const _booknames = [
     ['Offb', 'Offenbarung'],
 ];
 
+const flattenArray = (arrays) => [].concat.apply([], arrays);
+
 const _createLinkDetectorRegexp = () => {
-    const flatten = (arrays) => [].concat.apply([], arrays);
     const escapeForRegExp = (str) => str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 
     // regexp components
     const optionalSpaces = '\\s*';
-    const bookRegExpString = `(${flatten(_booknames).map(escapeForRegExp).join('|')})`;
+    const bookRegExpString = `(${flattenArray(_booknames).map(escapeForRegExp).join('|')})`;
     // Negative-Look-Behind-Group to avoid matching sth like Ps 2345 (without it would match 234 as a chapter)
     const numberOfMaximumThreeDigits = `\\d{1,3}(?!\\d)`;
     // TODO additional consistence check: maximum chapter number is (Psalm) 150.
     const chapter = numberOfMaximumThreeDigits;
     // TODO additional consistence check: maximum verse number is (Psalm 119),176.
     const verse = numberOfMaximumThreeDigits;
-    const optionalRange = `(${optionalSpaces}-${optionalSpaces}${verse}(,${optionalSpaces}${verse})?)?`;
-    const optionaFollowing = 'f?f?';
-    const verseOrRange = `${verse}${optionalRange}${optionaFollowing}`;
+    const optionalRange = `(${optionalSpaces}-(${optionalSpaces}${chapter},)?${optionalSpaces}${verse})?`;
+    const optionalFollowing = 'f?f?';
+    const verseOrRange = `${verse}${optionalRange}${optionalFollowing}`;
     // optional: verses seperated by '.' like in Gen 1,2.4.6-8.10
     const oneOrMoreVerses = `${verseOrRange}(\\.${verseOrRange})*`;
-    const re = new RegExp(`${bookRegExpString}\\.?${optionalSpaces}${chapter}${optionalRange}(,${optionalSpaces}${oneOrMoreVerses})?`, 'g');
+    const re = new RegExp(`${bookRegExpString}\\.?${optionalSpaces}${chapter}${optionalRange}(,${optionalSpaces}${oneOrMoreVerses})?`, 'ig');
+    return re;
+};
+
+const _createLinkResolverRegexp = () => {
+    const escapeForRegExp = (str) => str.replace(' ', '').replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+
+    // regexp components
+    const bookRegExpString = `(${flattenArray(_booknames).map(escapeForRegExp).join('|')})`;
+    const numberOfMaximumThreeDigits = `\\d{1,3}`;
+    // TODO additional consistence check: maximum chapter number is (Psalm) 150.
+    const chapter = `(${numberOfMaximumThreeDigits})`;
+    // TODO additional consistence check: maximum verse number is (Psalm 119),176.
+    const verse = `(${numberOfMaximumThreeDigits})`;
+    const optionalRange = `(-(${chapter},)?${verse})?`;
+    const optionalFollowing = 'f?f?';
+    const verseOrRange = `${verse}${optionalRange}${optionalFollowing}`;
+    // optional: verses seperated by '.' like in Gen 1,2.4.6-8.10
+    const oneOrMoreVerses = `${verseOrRange}(\\.${verseOrRange})*`;
+    const re = new RegExp(`${bookRegExpString}\\.?${chapter}${optionalRange}(,${oneOrMoreVerses})?`);
     return re;
 };
 
 const linkDetectorRegexp = _createLinkDetectorRegexp();
+const linkResolverRegexp = _createLinkResolverRegexp();
 
-const detect = (text) => text.match(linkDetectorRegexp) || [];
+const detectReference = (text) => text.match(linkDetectorRegexp) || [];
+
+const resolveReference = (rawReference) => {
+    const matches = linkResolverRegexp.exec(rawReference);
+    const chapter = parseInt(matches[2]);
+    const verseFrom = parseInt(matches[8]);
+    const chapterTo = parseInt(matches[11]) || chapter;
+    const verseTo = parseInt(matches[12]);
+
+    const from = {chapter, verse: verseFrom};
+    const to = matches[12] && {chapter: chapterTo, verse: verseTo};
+
+    const references = [{from, to}];
+    if (matches[14]) {
+        const from = {chapter, verse: parseInt(matches[14])};
+        const to = matches[18] && {chapter, verse: parseInt(matches[18])};
+        references.push({from, to});
+    }
+
+    return {
+        book: matches[1],
+        references
+    };
+};
 
 export {
-    detect,
-    _booknames,
+    detectReference,
+    resolveReference,
+    _booknames
 }
