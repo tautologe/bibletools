@@ -41,7 +41,7 @@ describe('link resolver', function () {
         });
     });
 
-    // not yet supported
+    // not yet implemented, seems not to be supported by javascript http://stackoverflow.com/a/11959872
     it.skip('should resolve multiple (more than two) verses', function () {
         assert.deepEqual(resolve('Gen1,3.6.9'), {
             book: 'Gen',
@@ -61,6 +61,15 @@ describe('link resolver', function () {
                     to: { chapter: 1, verse: 4}},
                 { from: { chapter: 1, verse: 10},
                     to: { chapter: 1, verse: 12}}
+            ]
+        });
+    });
+
+    it('should use canonical booknames', function () {
+        assert.deepEqual(resolve('Genesis1,3'), {
+            book: 'Gen',
+            references: [
+                { from: { chapter: 1, verse: 3}, to: undefined}
             ]
         });
     });

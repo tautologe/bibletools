@@ -67,6 +67,14 @@ const _booknames = [
     ['Offb', 'Offenbarung'],
 ];
 
+// reverse index to lookup canonical bookname (always the first in array)
+const _indexedBooknames = {};
+_booknames.forEach((book) => {
+    book.forEach((bookname) => {
+        _indexedBooknames[bookname] = book[0];
+    });
+});
+
 const flattenArray = (arrays) => [].concat.apply([], arrays);
 
 const regexFactory = (function () {
@@ -115,6 +123,7 @@ const detectReference = (text) => text.match(linkDetectorRegexp) || [];
 
 const resolveReference = (rawReference) => {
     const matches = linkResolverRegexp.exec(rawReference);
+    const book = _indexedBooknames[matches[1]];
     const chapter = parseInt(matches[2]);
     const verseFrom = parseInt(matches[8]);
     const chapterTo = parseInt(matches[11]) || chapter;
@@ -129,11 +138,7 @@ const resolveReference = (rawReference) => {
         const to = matches[18] && {chapter, verse: parseInt(matches[18])};
         references.push({from, to});
     }
-
-    return {
-        book: matches[1],
-        references
-    };
+    return {book, references};
 };
 
 export {
