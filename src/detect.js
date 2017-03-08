@@ -13,14 +13,14 @@ const _booknames = [
     ['2 Kön', '2 Könige', '2. Könige', '2. Kön', '2 Kö', '2. Kö'],
     ['1 Chr', '1. Chronik', '1. Chr', '1 Chronik'],
     ['2 Chr', '2. Chronik', '2. Chr', '2 Chronik'],
-    ['Esra'],
-    ['Nehemia'],                        ['Tob', 'Tobit'],['Jdt', 'Judit'],
+    ['Esra', 'Esr'],
+    ['Neh', 'Nehemia'],                        ['Tob', 'Tobit'],['Jdt', 'Judit'],
     ['Est', 'Ester', 'Esther'],         ['1 Makk', '1. Makkabäer'], ['2 Makk', '2. Makkabäer'],
     ['Ijob','Hiob'],
     ['Ps','Psalm','Psalmen','Psalter'],
     ['Spr', 'Sprüche'],
     ['Koh','Kohelet','Prediger','Pred'],
-    ['Hld', 'Hoheslied'],           ['Weish', 'Weisheit'],['Sir', 'Sirach'],
+    ['Hld', 'Hoheslied'],           ['Weish', 'Weisheit'],['Sir', 'Sirach', 'Jesus Sirach'],
     ['Jes', 'Jesaja'],
     ['Jer', 'Jeremia'],
     ['Klgl', 'Klagelieder'],        ['Bar', 'Baruch'],
@@ -91,8 +91,14 @@ const regexFactory = (function () {
 
         const optionalRange = `(${optionalSpaces}-(${optionalSpaces}${chapter},)?${optionalSpaces}${verse})?`;
         const verseOrRange = `${verse}${optionalRange}${optionalFollowing}`;
+        
         // optional: verses seperated by '.' like in Gen 1,2.4.6-8.10
-        const oneOrMoreVerses = `${verseOrRange}(\\.${verseOrRange})*`;
+        // detect unlimited number of verses
+        const anyNumberOfVerses = `${verseOrRange}(\\.${verseOrRange})*`;
+        // resolve up to three verses (explicit groups needed, so we cannot use *); 
+        // extend this pattern to the needed number of resolved verses
+        const upToThreeVerses = `${verseOrRange}(\\.${verseOrRange}(\\.${verseOrRange})?)?`;
+        const oneOrMoreVerses = groupChaptersAndVerses ? upToThreeVerses : anyNumberOfVerses;
         return `${bookRegExpString}\\.?${optionalSpaces}${chapter}${optionalRange}(,${optionalSpaces}${oneOrMoreVerses})?`;
     }
 
@@ -136,6 +142,11 @@ const resolveReference = (rawReference) => {
     if (matches[14]) {
         const from = {chapter, verse: parseInt(matches[14])};
         const to = matches[18] && {chapter, verse: parseInt(matches[18])};
+        references.push({from, to});
+    }
+    if (matches[20]) {
+        const from = {chapter, verse: parseInt(matches[20])};
+        const to = matches[24] && {chapter, verse: parseInt(matches[24])};
         references.push({from, to});
     }
     return {book, references};
