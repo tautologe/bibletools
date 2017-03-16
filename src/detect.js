@@ -72,6 +72,7 @@ const _indexedBooknames = {};
 _booknames.forEach((book) => {
     book.forEach((bookname) => {
         _indexedBooknames[bookname] = book[0];
+        _indexedBooknames[bookname.replace(' ', '')] = book[0];
     });
 });
 

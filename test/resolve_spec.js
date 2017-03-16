@@ -87,4 +87,13 @@ describe('link resolver', function () {
             ]
         });
     });
+
+    it('should detect book names with numbers and dots', function () {
+        assert.deepEqual(resolve('1.Joh4,23'), {
+            book: '1 Joh',
+            references: [
+                { from: { chapter: 4, verse: 23}, to: undefined}
+            ]
+        });
+    });
 });
