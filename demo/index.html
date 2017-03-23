@@ -85,13 +85,42 @@
             const rawReferences = window.detect.detectReference(document.getElementById('content').innerText);
             const resolvedReferences = rawReferences.map((reference) => window.detect.resolveReference(sanitizeReference(reference)));
             resolvedReferences.forEach((reference, i) => {
-                window.reader.getVerse(reference, (verseRange) => {
-                    document.getElementById('results').innerHTML += referenceTemplate(rawReferences[i], verseRangeToString(verseRange));
-                });
+                window.reader.getVerse(reference).then((verseRange) => {
+                    return document.getElementById('results').innerHTML += referenceTemplate(rawReferences[i], verseRangeToString(verseRange));
+                }).catch((err) => console.log(err));
             });
         };
+
+        const EventWorker = (function () {
+            let pending = false;
+            let next = null;
+
+            doNext = () => {
+                if (next) {
+                    return next().then(doNext);
+                }
+            }
+            
+            return {
+                add: (work) => {
+                    if (pending === false) {
+                        pending = true;
+                        work().then(() => {
+                            return doNext().then(() => pending = false);
+                        });
+                    } else {
+                        next = work;
+                    }
+                }
+            }
+        }());
+
         detectAndDisplayBibleReferences();
         document.getElementById('user-input').addEventListener("input", detectAndDisplayBibleReferences);
+        /* EventWorker.add(detectAndDisplayBibleReferences);
+        document.getElementById('user-input').addEventListener("input", () => {
+            EventWorker.add(detectAndDisplayBibleReferences);
+        });*/
         document.getElementById('booknames').innerHTML = window.detect._booknames.join(',');
     </script>
 </body>

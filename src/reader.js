@@ -1,14 +1,15 @@
-const loadJSON = (file, callback) => {
-    let xobj = new XMLHttpRequest();
-    xobj.overrideMimeType("application/json");
-    xobj.open('GET', file, true);
-    xobj.onreadystatechange = () => {
-        if (xobj.readyState == 4 && xobj.status == "200") {
-            callback(xobj.responseText);
+const loadJSON = (file) => new Promise(function(resolve, reject) {
+    let req = new XMLHttpRequest();
+    req.open('GET', file, true);
+    req.onload = () => {
+        if (req.status == "200") {
+            resolve(JSON.parse(req.responseText));
+        } else {
+            reject(Error(req.statusText))
         }
     };
-    xobj.send(null);
-}
+    req.send();
+});
 
 const mapBook = (bookName) => {
     // TODO extend
@@ -25,8 +26,8 @@ const getPath = (reference) => {
     return [mapBook(reference.book), reference.references[0].from.chapter];
 }
 
-const getChapter = (path, callback) => {
-    loadJSON(`bible/${path.join('/')}.json`, (response) => callback(JSON.parse(response)));
+const getChapter = (path) => {
+    return loadJSON(`bible/${path.join('/')}.json`);
 };
 
 const getVerseFromChapter = (versesRef, chapterJson) => {
@@ -38,12 +39,9 @@ const getVerseFromChapter = (versesRef, chapterJson) => {
     
 };
 
-const getVerse = (reference, callback) => {
+const getVerse = (reference) => {
     const path = getPath(reference);
-    getChapter(path, (chapterJson) => {
-        const verseRange = getVerseFromChapter(reference.references[0], chapterJson);
-        callback(verseRange);
-    });
+    return getChapter(path).then((chapterJson) => getVerseFromChapter(reference.references[0], chapterJson));
 };
 
 export {
