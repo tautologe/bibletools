@@ -84,10 +84,13 @@
         const detectAndDisplayBibleReferences = () => {
             const rawReferences = window.detect.detectReference(document.getElementById('content').innerText);
             const resolvedReferences = rawReferences.map((reference) => window.detect.resolveReference(sanitizeReference(reference)));
-            resolvedReferences.forEach((reference, i) => {
-                window.reader.getVerse(reference).then((verseRange) => {
-                    return document.getElementById('results').innerHTML += referenceTemplate(rawReferences[i], verseRangeToString(verseRange));
-                }).catch((err) => console.log(err));
+            const promises = resolvedReferences.map((reference, i) => {
+                return window.reader.getVerse(reference).then((verseRange) => {
+                    return referenceTemplate(rawReferences[i], verseRangeToString(verseRange));
+                });
+            });
+            return Promise.all(promises).then((referenceTemplates) => {
+                document.getElementById('results').innerHTML = referenceTemplates.join('')
             });
         };
 
@@ -95,32 +98,34 @@
             let pending = false;
             let next = null;
 
-            doNext = () => {
-                if (next) {
-                    return next().then(doNext);
+            const reset = () => {
+                next = null;
+                pending = false;
+            }
+
+            const doNext = () => {
+                if (next && !pending) {
+                    pending = true;
+                    next().then(() => {
+                        reset();
+                    }).catch((err) => {
+                        reset();
+                        console.error(err);
+                    });
                 }
             }
+
+            window.setInterval(doNext, 1000);
             
             return {
-                add: (work) => {
-                    if (pending === false) {
-                        pending = true;
-                        work().then(() => {
-                            return doNext().then(() => pending = false);
-                        });
-                    } else {
-                        next = work;
-                    }
-                }
+                add: (work) => next = work
             }
         }());
 
         detectAndDisplayBibleReferences();
-        document.getElementById('user-input').addEventListener("input", detectAndDisplayBibleReferences);
-        /* EventWorker.add(detectAndDisplayBibleReferences);
         document.getElementById('user-input').addEventListener("input", () => {
             EventWorker.add(detectAndDisplayBibleReferences);
-        });*/
+        });
         document.getElementById('booknames').innerHTML = window.detect._booknames.join(',');
     </script>
 </body>
