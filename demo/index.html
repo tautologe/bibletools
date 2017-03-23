@@ -74,16 +74,21 @@
     <script src="bundle.js"></script>
     <script>
         const sanitizeReference = (reference) => reference.replace(/\s/g, '');
-        const referenceTemplate = (reference) => `<p>${reference}:
+        const referenceTemplate = (reference, text) => `<p>${reference}:
             <small><a href="https://bibleserver.com/text/LUT/${sanitizeReference(reference)}" target="_blank">
                 Öffne auf bibleserver.com
-            </a></small></p>`;
+            </a></small></p><p>${text}</p>`;
+
+        const verseRangeToString = (verseRange) => verseRange.map((verse) => `<small>${verse.verse}</small> ${verse.text}`).join(' ');
         
         const detectAndDisplayBibleReferences = () => {
-            const references = window.detect.detectReference(document.getElementById('content').innerText);
-            const links = references.map((reference) => referenceTemplate(reference));
-            document.getElementById('results').innerHTML = links.join('');
-            references.forEach((reference) => console.log(JSON.stringify(window.detect.resolveReference(sanitizeReference(reference)))));
+            const rawReferences = window.detect.detectReference(document.getElementById('content').innerText);
+            const resolvedReferences = rawReferences.map((reference) => window.detect.resolveReference(sanitizeReference(reference)));
+            resolvedReferences.forEach((reference, i) => {
+                window.reader.getVerse(reference, (verseRange) => {
+                    document.getElementById('results').innerHTML += referenceTemplate(rawReferences[i], verseRangeToString(verseRange));
+                });
+            });
         };
         detectAndDisplayBibleReferences();
         document.getElementById('user-input').addEventListener("input", detectAndDisplayBibleReferences);

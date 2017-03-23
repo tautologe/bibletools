@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "test": "mocha --compilers js:babel-register",
-    "build": "babel src/detect.js --out-file demo/bundle.js"
+    "build": "babel src/*.js --out-file demo/bundle.js"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
