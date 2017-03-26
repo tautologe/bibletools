@@ -98,6 +98,16 @@ describe('link detector', function () {
         it('verses with more than three digits', function () {
             assert.deepEqual(detect('Es steht in 1. Mo. 6,9121 geschrieben'), ['1. Mo. 6']);
         });
+
+        it('booknames with small caps', function () {
+            assert.deepEqual(detect('gen 1,1'), []);
+        });
+
+        it.skip('Booknames, being preceded by other letters', function () {
+            // XxAm 4,12 could be interpreted as Am 4,12 (=Amos) otherwise
+            // not supported yet as javascript does not support negative look behind groups
+            assert.deepEqual(detect('XxAm 4,12'), []);
+        });
     });
 });
 

@@ -80,8 +80,11 @@ const flattenArray = (arrays) => [].concat.apply([], arrays);
 
 const regexFactory = (function () {
     const optionalFollowing = 'f?f?';
-    // Negative-Look-Behind-Group to avoid matching sth like Ps 2345 (without it would match 234 as a chapter)
+    // Negative-Look-Ahead-Group to avoid matching sth like Ps 2345 (without it would match 234 as a chapter)
     const numberOfMaximumThreeDigits = `\\d{1,3}(?!\\d)`;
+    // Negative-Look-Behind to avoid matching booknames preceded by letters
+    // TODO Not supported by javascript
+    // const noPrecedingLetters = `(?<![a-zA-Z])`;
 
     const createLinkRegexpString = (bookRegExpString, allowWhitespace, groupChaptersAndVerses) => {
         const optionalSpaces = allowWhitespace ? '\\s*' : '';
@@ -110,7 +113,7 @@ const regexFactory = (function () {
             const makeSpaceOptional = (str) => str.replace(' ', '\\s?');
             const bookRegExpString = `(${flattenArray(_booknames).map(escapeForRegExp).map(makeSpaceOptional).join('|')})`;
             const regexString = createLinkRegexpString(bookRegExpString, true, false);
-            const re = new RegExp(regexString, 'ig');
+            const re = new RegExp(regexString, 'g');
             return re;
         },
         createLinkResolverRegexp: () => {
