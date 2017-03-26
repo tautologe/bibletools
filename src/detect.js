@@ -107,7 +107,8 @@ const regexFactory = (function () {
     return {
         createLinkDetectorRegexp: () => {
             const escapeForRegExp = (str) => str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-            const bookRegExpString = `(${flattenArray(_booknames).map(escapeForRegExp).join('|')})`;
+            const makeSpaceOptional = (str) => str.replace(' ', '\\s?');
+            const bookRegExpString = `(${flattenArray(_booknames).map(escapeForRegExp).map(makeSpaceOptional).join('|')})`;
             const regexString = createLinkRegexpString(bookRegExpString, true, false);
             const re = new RegExp(regexString, 'ig');
             return re;

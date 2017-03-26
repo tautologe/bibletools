@@ -80,6 +80,10 @@ describe('link detector', function () {
         it('umlaut', function () {
             assert.deepEqual(detect('Es steht\n in 1. Kön 3,12 geschrieben'), ['1. Kön 3,12']);
         });
+
+        it('left out spaces', function () {
+            assert.deepEqual(detect('Es steht\n in 1.Kön 3,12 geschrieben'), ['1.Kön 3,12']);
+        });
     });
 
     describe('should not detect', function () {
