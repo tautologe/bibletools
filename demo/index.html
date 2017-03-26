@@ -29,7 +29,7 @@
                 Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1,15 - 2,4.
                 Mal steht hinter dem Buch ein Punkt Röm. 4,1 oder es fehlt das Leerzeichen und kein Vers angegeben Offb22.
                 <br /><br />
-                Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.5.7-9.25.
+                Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.7-9.20.
                 Zeilenumbrüche Gen 2,<br />
                 23 sind kein Problem.
                 </div>
@@ -86,7 +86,8 @@
             const resolvedReferences = rawReferences.map((reference) => window.detect.resolveReference(sanitizeReference(reference)));
             const promises = resolvedReferences.map((reference, i) => {
                 return window.reader.getVerse(reference).then((verseRange) => {
-                    return referenceTemplate(rawReferences[i], verseRangeToString(verseRange));
+                    const flattenedVerses = [].concat(...verseRange);
+                    return referenceTemplate(rawReferences[i], verseRangeToString(flattenedVerses));
                 });
             });
             return Promise.all(promises).then((referenceTemplates) => {

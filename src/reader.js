@@ -100,16 +100,19 @@ const getChapter = (path) => {
 
 const getVerseFromChapter = (versesRef, chapterJson) => {
     if (versesRef.to) {
-        return chapterJson.verses.slice(versesRef.from.verse - 1, versesRef.to.verse - 1);
+        return chapterJson.verses.slice(versesRef.from.verse - 1, versesRef.to.verse);
     } else {
         return chapterJson.verses.slice(versesRef.from.verse - 1, versesRef.from.verse);
     }
-    
+};
+
+const getVersesFromChapter = (verseRefs, chapterJson) => {
+    return verseRefs.map((verseRef) => getVerseFromChapter(verseRef, chapterJson));
 };
 
 const getVerse = (reference) => {
     const path = getPath(reference);
-    return getChapter(path).then((chapterJson) => getVerseFromChapter(reference.references[0], chapterJson));
+    return getChapter(path).then((chapterJson) => getVersesFromChapter(reference.references, chapterJson));
 };
 
 export {
