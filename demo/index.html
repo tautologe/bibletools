@@ -80,9 +80,24 @@
             </a></small></p><p>${text}</p>`;
 
         const verseRangeToString = (verseRange) => verseRange.map((verse) => `<small>${verse.verse}</small> ${verse.text}`).join(' ');
-        
-        const detectAndDisplayBibleReferences = () => {
-            const rawReferences = window.detect.detectReference(document.getElementById('content').innerText);
+
+        const UserNotes = (function (storage, inputElement) {
+            const STORAGE_KEY = 'userNotes';
+            const _getUserInput = () => inputElement.innerText;
+            return {
+                get: _getUserInput,
+                save: () => storage.setItem(STORAGE_KEY, _getUserInput()),
+                restore: () => {
+                    const storageContent = storage.getItem(STORAGE_KEY);
+                    if (storageContent.trim()) {
+                        inputElement.innerText = storageContent;
+                    }
+                }
+            }
+        }(localStorage, document.getElementById('user-input')));
+
+        const detectAndResolveBibleReferences = (inputText) => {
+            const rawReferences = window.detect.detectReference(inputText);
             const resolvedReferences = rawReferences.map((reference) => window.detect.resolveReference(sanitizeReference(reference)));
             const promises = resolvedReferences.map((reference, i) => {
                 return window.reader.getVerse(reference).then((verseRange) => {
@@ -92,9 +107,14 @@
                     }
                 });
             });
-            return Promise.all(promises).then((referenceTemplates) => {
-                document.getElementById('results').innerHTML = referenceTemplates.join('')
-            });
+            return Promise.all(promises);
+        }
+
+        const displayBibleVerses = (flattenedVerses) => document.getElementById('results').innerHTML = flattenedVerses.join('');
+
+        const detectBibleReferencesInUserInput = () => {
+            UserNotes.save();
+            return detectAndResolveBibleReferences(UserNotes.get()).then(displayBibleVerses);
         };
 
         const EventWorker = (function () {
@@ -104,7 +124,7 @@
 
             const reset = () => {
                 if (timer > 0) {
-                    console.log(`detection took ${Date.now() - timer}ms`);
+                    console.log(`worker took ${Date.now() - timer}ms`);
                 }
                 next = null;
                 pending = false;
@@ -130,9 +150,10 @@
             }
         }());
 
-        detectAndDisplayBibleReferences();
+        UserNotes.restore();
+        detectBibleReferencesInUserInput();
         document.getElementById('user-input').addEventListener("input", () => {
-            EventWorker.add(detectAndDisplayBibleReferences);
+            EventWorker.add(detectBibleReferencesInUserInput);
         });
         document.getElementById('booknames').innerHTML = window.detect._booknames.join(',');
     </script>
