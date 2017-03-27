@@ -44,17 +44,17 @@
             <ul>
                 <li>Nur deutsche Notationen und Buchnamen werden erkannt</li>
                 <li>Nicht alle Varianten der Buchnamen werden erkannt (siehe unten)</li>
-                <li>Es erfolgt keine Prüfung ob der Vers/das Kapitel wirklich existiert (z.B. 1. Mo 4,99; Obd 2,1)</li>
+                <!--<li>Es erfolgt keine Prüfung ob der Vers/das Kapitel wirklich existiert (z.B. 1. Mo 4,99; Obd 2,1)</li>-->
+                <li>Bei Büchern mit nur einem Kapitel muss die Kapitelnummer 1 mit angegeben werden. Obd 10 für Obd 1,10 wird nicht erkannt.</li>
                 <li>Wenn man dem Link folgt: bibleserver.com erkennt beim Markieren nicht alle Varianten der Versangabe</li>
             </ul>
             <h3>Bekannte Buchnamen:</h3>
             <p id="booknames"></p>
         </div>
-
+        <!--
         <div>
             <h3>Mögliche Weiterentwicklung:</h3>
             <ul>
-                <li>Anzeige des Bibeltextes in einem lizenzfreien Format</li>
                 <li>Speicherung der Nutzereingaben im local storage</li>
                 <li>OCR-Erkennung (z.B. mit einer mobilen App)</li>
                 <li>Statt Texteingabe Angabe einer URL (erfordert Backend oder lokale Installation)</li>
@@ -68,7 +68,7 @@
                 <li>Einfache Zusammenstellung von Bibelstellen für Bibelarbeiten u.ä.</li>
                 <li>Benutzung ohne Installation/Anmeldung</li>
                 
-        </div>
+        </div>-->
     </main>
     
     <script src="bundle.js"></script>
@@ -86,8 +86,10 @@
             const resolvedReferences = rawReferences.map((reference) => window.detect.resolveReference(sanitizeReference(reference)));
             const promises = resolvedReferences.map((reference, i) => {
                 return window.reader.getVerse(reference).then((verseRange) => {
-                    const flattenedVerses = [].concat(...verseRange);
-                    return referenceTemplate(rawReferences[i], verseRangeToString(flattenedVerses));
+                    if (verseRange) {
+                        const flattenedVerses = [].concat(...verseRange);
+                        return referenceTemplate(rawReferences[i], verseRangeToString(flattenedVerses));
+                    }
                 });
             });
             return Promise.all(promises).then((referenceTemplates) => {
@@ -98,8 +100,12 @@
         const EventWorker = (function () {
             let pending = false;
             let next = null;
+            let timer = 0;
 
             const reset = () => {
+                if (timer > 0) {
+                    console.log(`detection took ${Date.now() - timer}ms`);
+                }
                 next = null;
                 pending = false;
             }
@@ -107,11 +113,12 @@
             const doNext = () => {
                 if (next && !pending) {
                     pending = true;
+                    timer = Date.now();
                     next().then(() => {
                         reset();
                     }).catch((err) => {
                         reset();
-                        console.error(err);
+                        console.error('catched error', err);
                     });
                 }
             }

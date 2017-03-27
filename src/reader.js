@@ -112,7 +112,7 @@ const getVersesFromChapter = (verseRefs, chapterJson) => {
 
 const getVerse = (reference) => {
     const path = getPath(reference);
-    return getChapter(path).then((chapterJson) => getVersesFromChapter(reference.references, chapterJson));
+    return getChapter(path).then((chapterJson) => getVersesFromChapter(reference.references, chapterJson)).catch((err) => console.log(err));
 };
 
 export {
