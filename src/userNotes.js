@@ -6,7 +6,7 @@ const UserNotes = function (storage, inputElement) {
         save: () => storage.setItem(STORAGE_KEY, _getUserInput()),
         restore: () => {
             const storageContent = storage.getItem(STORAGE_KEY);
-            if (storageContent.trim()) {
+            if (storageContent && storageContent.trim()) {
                 inputElement.innerText = storageContent;
             }
         }
