@@ -161,4 +161,4 @@ export {
     detectReference,
     resolveReference,
     _booknames
-}
+};

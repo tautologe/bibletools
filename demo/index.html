@@ -73,7 +73,13 @@
     
     <script src="bundle.js"></script>
     <script>
-        window.app.start(window);
+        window.app.start(
+            window,
+            window.eventWorker.EventWorker(window),
+            window.userNotes.UserNotes,
+            window.detect,
+            window.reader.getVerse,
+            window.render.BibleTextRenderer);
     </script>
 </body>
 </html>
