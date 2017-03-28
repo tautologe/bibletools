@@ -77,12 +77,19 @@
         const outputElement = window.document.getElementById('results');
         const userInputElement = window.document.getElementById('user-input');
         const eventWorker = window.eventWorker.EventWorker(window);
+        const userNotes = window.userNotes.UserNotes(window.localStorage, userInputElement);
+        userNotes.restore();
         const processUserInput = window.app.getInputProcessor(
-            window.userNotes.UserNotes(window.localStorage, userInputElement),
+            userNotes.get,
             window.detect,
             window.reader.getVerse,
             window.render.BibleTextRenderer(outputElement));
-        userInputElement.addEventListener("input", () => eventWorker.add(processUserInput));
+        
+        processUserInput();
+        userInputElement.addEventListener("input", () => eventWorker.add(() => {
+            userNotes.save();
+            return processUserInput();
+        }));
         bookNamesElement.innerHTML = window.detect._booknames.join(',');
     </script>
 </body>

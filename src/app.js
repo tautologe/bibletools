@@ -1,4 +1,4 @@
-const getInputProcessor = (userNotes, referenceDetector, getVerse, bibleTextRenderer) => {
+const getInputProcessor = (getUserInput, referenceDetector, getVerse, bibleTextRenderer) => {
     const getBibleTextForReference = ({raw, resolved}) => 
         getVerse(resolved).then((bibleText) => bibleTextRenderer.renderBibleReferences(raw, bibleText));
 
@@ -10,13 +10,9 @@ const getInputProcessor = (userNotes, referenceDetector, getVerse, bibleTextRend
     };
 
     const detectBibleReferencesInUserInput = () => {
-        userNotes.save();
-        const bibelReferences = detectAndResolveBibleReferences(userNotes.get());
+        const bibelReferences = detectAndResolveBibleReferences(getUserInput());
         return Promise.all(bibelReferences.map(getBibleTextForReference)).then(bibleTextRenderer.displayBibleVerses);
     };
-
-    userNotes.restore();
-    detectBibleReferencesInUserInput();
     return detectBibleReferencesInUserInput;
 };
 
