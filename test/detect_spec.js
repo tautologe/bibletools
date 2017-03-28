@@ -1,4 +1,4 @@
-import {detectReference as detect} from '../src/detect';
+import {detectReference as detect} from '../src/bibleUtil/detect';
 import assert from 'assert';
 
 describe('link detector', function () {

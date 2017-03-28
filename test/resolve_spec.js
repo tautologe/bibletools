@@ -1,4 +1,4 @@
-import {resolveReference as resolve} from '../src/detect';
+import {resolveReference as resolve} from '../src/bibleUtil/detect';
 import assert from 'assert';
 
 describe('link resolver', function () {
