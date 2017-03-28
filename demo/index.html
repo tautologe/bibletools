@@ -73,14 +73,6 @@
     
     <script src="bundle.js"></script>
     <script>
-        const sanitizeReference = (reference) => reference.replace(/\s/g, '');
-        const referenceTemplate = (reference, text) => `<p>${reference}:
-            <small><a href="https://bibleserver.com/text/LUT/${sanitizeReference(reference)}" target="_blank">
-                Öffne auf bibleserver.com
-            </a></small></p><p>${text}</p>`;
-
-        const verseRangeToString = (verseRange) => verseRange.map((verse) => `<small>${verse.verse}</small> ${verse.text}`).join(' ');
-
         const UserNotes = (function (storage, inputElement) {
             const STORAGE_KEY = 'userNotes';
             const _getUserInput = () => inputElement.innerText;
@@ -95,27 +87,6 @@
                 }
             }
         }(localStorage, document.getElementById('user-input')));
-
-        const detectAndResolveBibleReferences = (inputText) => {
-            const rawReferences = window.detect.detectReference(inputText);
-            const resolvedReferences = rawReferences.map((reference) => window.detect.resolveReference(sanitizeReference(reference)));
-            const promises = resolvedReferences.map((reference, i) => {
-                return window.reader.getVerse(reference).then((verseRange) => {
-                    if (verseRange) {
-                        const flattenedVerses = [].concat(...verseRange);
-                        return referenceTemplate(rawReferences[i], verseRangeToString(flattenedVerses));
-                    }
-                });
-            });
-            return Promise.all(promises);
-        }
-
-        const displayBibleVerses = (flattenedVerses) => document.getElementById('results').innerHTML = flattenedVerses.join('');
-
-        const detectBibleReferencesInUserInput = () => {
-            UserNotes.save();
-            return detectAndResolveBibleReferences(UserNotes.get()).then(displayBibleVerses);
-        };
 
         const EventWorker = (function () {
             let pending = false;
@@ -150,11 +121,45 @@
             }
         }());
 
+        const BibleTextRenderer = (function (outputElement) {
+            const renderBibleReferences = (rawReference, nestedVerses) => {
+                const uriEscapeReference = (reference) => encodeURIComponent(reference.replace(/\s/g, ''));
+                const generateBibleServerLink = (reference) => `https://bibleserver.com/text/LUT/${uriEscapeReference(reference)}`;
+                // TODO html escaping
+                const referenceTemplate = (reference, bibleText) => `<p>${reference}:
+                    <small><a href="${generateBibleServerLink(reference)}" target="_blank">
+                        Öffne auf bibleserver.com
+                    </a></small></p><p>${bibleText}</p>`;
+                const verseRangeToString = (verseRange) => verseRange.map((verse) => `<small>${verse.verse}</small> ${verse.text}`).join(' ');
+
+                const flattenedVerses = [].concat(...nestedVerses);
+                return referenceTemplate(rawReference, verseRangeToString(flattenedVerses));
+            };
+            const displayBibleVerses = (flattenedVerses) => outputElement.innerHTML = flattenedVerses.join('');
+            
+            return {renderBibleReferences, displayBibleVerses};
+        }(document.getElementById('results')));
+    </script>
+    <script>
+        const getBibleTextForReference = ({raw, resolved}) => 
+            window.reader.getVerse(resolved).then((bibleText) => BibleTextRenderer.renderBibleReferences(raw, bibleText));
+
+        const detectAndResolveBibleReferences = (inputText) => {
+            const removeWhitespace = (reference) => reference.replace(/\s/g, '');
+            const rawReferences = window.detect.detectReference(inputText);
+            const resolveReference = (reference) => window.detect.resolveReference(removeWhitespace(reference));
+            return rawReferences.map((reference) => ({ raw: reference, resolved: resolveReference(reference)}));
+        };
+
+        const detectBibleReferencesInUserInput = () => {
+            UserNotes.save();
+            const bibelReferences = detectAndResolveBibleReferences(UserNotes.get());
+            return Promise.all(bibelReferences.map(getBibleTextForReference)).then(BibleTextRenderer.displayBibleVerses);
+        };
+
         UserNotes.restore();
         detectBibleReferencesInUserInput();
-        document.getElementById('user-input').addEventListener("input", () => {
-            EventWorker.add(detectBibleReferencesInUserInput);
-        });
+        document.getElementById('user-input').addEventListener("input", () => EventWorker.add(detectBibleReferencesInUserInput));
         document.getElementById('booknames').innerHTML = window.detect._booknames.join(',');
     </script>
 </body>

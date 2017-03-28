@@ -1,4 +1,5 @@
 {
   "presets": ["babili"],
-  "plugins": ["transform-es2015-modules-umd"]
+  "plugins": ["transform-es2015-modules-umd"],
+  "sourceMaps": true
 }
