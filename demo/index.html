@@ -13,7 +13,7 @@
             min-width: 280px; max-width: 550px;
         }
         .half-box > div { padding: 20px; }
-        #user-input { border: 1px dashed green; }
+        #user-input { border: 1px dashed green;word-wrap: break-word; }
         #results { border: 1px dashed red; }
         #results:empty:not(:focus):before{content:attr(data-defaulttext)}
         #booknames { font-size: 0.6em; overflow-wrap: break-word; }
@@ -40,6 +40,11 @@
             </div>
         </div>
         <div>
+            <h3>Funktionen</h3>
+            <ul>
+                <li>Erkennung und Auflösung von Bibelstellenangaben in beliebigen Texten</li>
+                <li>Anzeige des referenzieren Bibeltextes (lizenzfreie Übersetzung)</li>
+            </ul>
             <h3>Beschränkungen:</h3>
             <ul>
                 <li>Nur deutsche Notationen und Buchnamen werden erkannt</li>
@@ -55,30 +60,60 @@
         <div>
             <h3>Mögliche Weiterentwicklung:</h3>
             <ul>
-                <li>Speicherung der Nutzereingaben im local storage</li>
+                <li>Vorauswahl von Bibelstellen in URL-Hash</li>
+                <li>Konkordanz-Funktion</li>
+                <li>Parallelstellen</li>
+                <li>Notizen teilen (erfordert serverseitige Speicherung)</li>
                 <li>OCR-Erkennung (z.B. mit einer mobilen App)</li>
                 <li>Statt Texteingabe Angabe einer URL (erfordert Backend oder lokale Installation)</li>
                 <li>Druckfunktion</li>
                 <li>Apps für Desktop und mobile Geräte</li>
                 <li>Inhaltsanalyse von Bibeltexten, statistische Auswertung</li>
-                <li>Performance-Verbesserung: Input-Events cachen</li>
             </ul>
             <h3>USPs</h3>
             <ul>
                 <li>Einfache Zusammenstellung von Bibelstellen für Bibelarbeiten u.ä.</li>
                 <li>Benutzung ohne Installation/Anmeldung</li>
-                
         </div>-->
     </main>
     
     <script src="bundle.js"></script>
+    <script>
+        const getFragmentQuery = () => {
+            if (window.document.location.hash.length < 3) {
+                return;
+            }
+            const paramStrings = window.document.location.hash.substring(1).split('&');
+            return paramStrings.reduce((result, paramString) => {
+                if (paramString.indexOf('=') > 0) {
+                    const key = paramString.split('=')[0];
+                    const value = decodeURIComponent(paramString.split('=')[1]);
+                    result[key] = value;
+                }
+                return result;
+            }, {});
+        };
+
+        const hasFragmentQuery = () => getFragmentQuery() && getFragmentQuery()['q'] && getFragmentQuery()['q'].length > 1;
+
+        const restoreFromFragmentQuery = (inputElement) => {
+            const fragmentQuery = getFragmentQuery();
+            if (fragmentQuery && fragmentQuery['q'].length > 1) {
+                inputElement.innerText = fragmentQuery['q'];
+            }
+        };
+    </script>
     <script>
         const bookNamesElement = window.document.getElementById('booknames');
         const outputElement = window.document.getElementById('results');
         const userInputElement = window.document.getElementById('user-input');
         const eventWorker = window.eventWorker.EventWorker(window);
         const userNotes = window.userNotes.UserNotes(window.localStorage, userInputElement);
-        userNotes.restore();
+        if (hasFragmentQuery()) {
+            restoreFromFragmentQuery(userInputElement);
+        } else {
+            userNotes.restore();
+        }
         const processUserInput = window.app.getInputProcessor(
             userNotes.get,
             window.detect,
@@ -86,10 +121,20 @@
             window.render.BibleTextRenderer(outputElement));
         
         processUserInput();
-        userInputElement.addEventListener("input", () => eventWorker.add(() => {
+        const scheduleProcessing = () => eventWorker.add(() => {
             userNotes.save();
             return processUserInput();
-        }));
+        });
+        userInputElement.addEventListener("input", scheduleProcessing);
+        
+        window.addEventListener("hashchange", () => {
+            if (hasFragmentQuery()) {
+                restoreFromFragmentQuery(userInputElement);
+            } else {
+                userNotes.restore();
+            }
+            scheduleProcessing();
+        }); 
         bookNamesElement.innerHTML = window.detect._booknames.join(',');
     </script>
 </body>

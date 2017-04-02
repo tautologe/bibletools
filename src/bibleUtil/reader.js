@@ -82,9 +82,9 @@ const mapBook = (bookName) => {
         'Jak':'Jak',
         '1 Petr':'1Petr',
         '2 Petr':'2Petr',
-        '1 Joh':'1Joh',
-        '2 Joh':'2Joh',
-        '3 Joh':'3Joh',
+        '1 Joh':'1Jo',
+        '2 Joh':'2Jo',
+        '3 Joh':'3Jo',
         'Jud':'Jud'
     };
     return bookMapping[bookName];

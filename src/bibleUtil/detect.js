@@ -55,7 +55,7 @@ const _booknames = [
     ['1 Tim', '1. Tim', '1. Timotheus'],
     ['2 Tim', '2. Tim', '2. Timotheus'],
     ['Tit', 'Titus'],
-    ['Phlm', 'Philemon'],
+    ['Phlm', 'Philemon','Phim'],
     ['Hebr', 'Hebräer', 'Hebräerbrief'],
     ['Jak', 'Jakobus'],
     ['1 Petr', '1. Petrus'],
