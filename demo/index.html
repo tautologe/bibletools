@@ -4,13 +4,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Automatische Bibelstellenerkennung (Demo)</title>
     <style>
-        main { max-width: 1200px; margin: auto; }
+        main { max-width: 1600px; margin: auto; }
         .half-container { display: flex; flex-wrap: wrap; }
         .half-box {
             flex: 1; display: flex; flex-direction: column;
             justify-content: top;
             margin: 20px;
-            min-width: 280px; max-width: 550px;
+            min-width: 280px; max-width: 750px;
         }
         .half-box > div { padding: 20px; }
         #user-input { border: 1px dashed green;word-wrap: break-word; }
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div id="detection" class="half-box">
-                <p>Erkannte Bibelstellen:</p>
+                <p>Erkannte Bibelstellen <small>(Lutherübersetzung, Revision von 1912, gemeinfrei)</small>:</p>
                 <div id="results" data-defaulttext="Keine Bibelstellen erkannt."></div>
             </div>
         </div>
@@ -44,6 +44,11 @@
             <ul>
                 <li>Erkennung und Auflösung von Bibelstellenangaben in beliebigen Texten</li>
                 <li>Anzeige des referenzieren Bibeltextes (lizenzfreie Übersetzung)</li>
+                <li>Verse können mit der URL vorausgewählt werden, z.B. <a href="#q=Joh3,16">#q=Joh3,16</a>, Beispiele:
+                    <ul>
+                        <li><a href="#q=Röm1,1-7;1Kor1,1-3;2Kor1,1-2;Gal1,1-3;Kol1,1-2;Eph1,1-2;Phil1,1-2;1Thess1,1;2Thess1,1-2;1Tim1,1;2Tim1,1-2;Tit1,1-4;Phlm1,1-3;Jak1,1;Jud1,1-2;1Petr1,1-2;2Petr1,1-2;1Joh1,1;2Joh1,1-2;3Joh1,1-2;Hebr1,1;Offb1,4">Alle Briefeinleitungen des neuen Testaments</a></li>
+                    </ul>
+                </li>
             </ul>
             <h3>Beschränkungen:</h3>
             <ul>
