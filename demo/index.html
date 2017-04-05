@@ -123,7 +123,7 @@
             userNotes.get,
             window.detect,
             window.reader.getVerse,
-            window.render.BibleTextRenderer(outputElement));
+            window.render.BibleTextRenderer(window, outputElement));
         
         processUserInput();
         const scheduleProcessing = () => eventWorker.add(() => {

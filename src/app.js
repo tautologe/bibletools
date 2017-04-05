@@ -1,6 +1,10 @@
 const getInputProcessor = (getUserInput, referenceDetector, getVerse, bibleTextRenderer) => {
-    const getBibleTextForReference = ({raw, resolved}) => 
-        getVerse(resolved).then((bibleText) => bibleTextRenderer.renderBibleReferences(raw, bibleText));
+    const getBibleTextForReference = ({raw, resolved}) => {
+        return getVerse(resolved).then((bibleText) => {
+            return bibleTextRenderer.renderBibleReferences(raw, bibleText);
+        });
+    }
+        
 
     const detectAndResolveBibleReferences = (inputText) => {
         const removeWhitespace = (reference) => reference.replace(/\s/g, '');

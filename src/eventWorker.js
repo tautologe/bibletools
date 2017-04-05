@@ -18,8 +18,8 @@ const EventWorker = function (_window) {
             next().then(() => {
                 reset();
             }).catch((err) => {
-                reset();
                 _window.console.error('catched error', err);
+                reset();
             });
         }
     }
