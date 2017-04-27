@@ -14,16 +14,16 @@ const _booknames = [
     ['1 Chr', '1. Chronik', '1. Chr', '1 Chronik'],
     ['2 Chr', '2. Chronik', '2. Chr', '2 Chronik'],
     ['Esra', 'Esr'],
-    ['Neh', 'Nehemia'],                        ['Tob', 'Tobit'],['Jdt', 'Judit'],
-    ['Est', 'Ester', 'Esther'],         ['1 Makk', '1. Makkabäer'], ['2 Makk', '2. Makkabäer'],
+    ['Neh', 'Nehemia'],
+    ['Est', 'Ester', 'Esther'],
     ['Ijob','Hiob'],
     ['Ps','Psalm','Psalmen','Psalter'],
     ['Spr', 'Sprüche'],
     ['Koh','Kohelet','Prediger','Pred'],
-    ['Hld', 'Hoheslied'],           ['Weish', 'Weisheit'],['Sir', 'Sirach', 'Jesus Sirach'],
+    ['Hld', 'Hoheslied'],
     ['Jes', 'Jesaja'],
     ['Jer', 'Jeremia'],
-    ['Klgl', 'Klagelieder', 'Klag'],        ['Bar', 'Baruch'],
+    ['Klgl', 'Klagelieder', 'Klag'],
     ['Ez','Ezechiel','Hes','Hesekiel'],
     ['Dan', 'Daniel'],
     ['Hos', 'Hosea'],
@@ -65,6 +65,13 @@ const _booknames = [
     ['3 Joh', '3. Joh', '3. Johannes', '3. Brief des Johannes', '3. Johannesbrief'],
     ['Jud', 'Judas'],
     ['Offb', 'Offenbarung'],
+    ['Jdt', 'Judit'],
+    ['Weish', 'Weisheit'],
+    ['Tob', 'Tobit'],
+    ['Sir', 'Sirach', 'Jesus Sirach'],
+    ['Bar', 'Baruch'],
+    ['1 Makk', '1. Makkabäer'],
+    ['2 Makk', '2. Makkabäer'],
 ];
 
 // reverse index to lookup canonical bookname (always the first in array)
@@ -83,14 +90,14 @@ const regexFactory = (function () {
     // Negative-Look-Ahead-Group to avoid matching sth like Ps 2345 (without it would match 234 as a chapter)
     const numberOfMaximumThreeDigits = `\\d{1,3}(?!\\d)`;
     // Negative-Look-Behind to avoid matching booknames preceded by letters
-    // TODO Not supported by javascript
+    // TODO: Not supported by javascript
     // const noPrecedingLetters = `(?<![a-zA-Z])`;
 
     const createLinkRegexpString = (bookRegExpString, allowWhitespace, groupChaptersAndVerses) => {
         const optionalSpaces = allowWhitespace ? '\\s*' : '';
-        // TODO additional consistence check: maximum chapter number is (Psalm) 150.
+        // TODO: additional consistence check: maximum chapter number is (Psalm) 150.
         const chapter = groupChaptersAndVerses ? `(${numberOfMaximumThreeDigits})` : numberOfMaximumThreeDigits;
-        // TODO additional consistence check: maximum verse number is (Psalm 119),176.
+        // TODO: additional consistence check: maximum verse number is (Psalm 119),176.
         const verse = groupChaptersAndVerses ? `(${numberOfMaximumThreeDigits})` : numberOfMaximumThreeDigits;
 
         const optionalRange = `(${optionalSpaces}-(${optionalSpaces}${chapter},)?${optionalSpaces}${verse})?`;
