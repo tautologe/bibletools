@@ -1,4 +1,4 @@
-const BibleTextRenderer = function (_window, outputElement) {
+const BibleTextRenderer = function (_window, outputElement, strongRepo) {
     const renderBibleReferences = (rawReference, nestedVerses) => {
         const uriEscapeReference = (reference) => encodeURIComponent(reference.replace(/\s/g, ''));
         const generateBibleServerLink = (reference) => `https://bibleserver.com/text/LUT/${uriEscapeReference(reference)}`;
@@ -10,9 +10,19 @@ const BibleTextRenderer = function (_window, outputElement) {
         const referenceTemplate = (reference, bibleText) => `<p>${sanitizeHTML(reference)}:
             <small><a href="${generateBibleServerLink(reference)}" target="_blank">
                 Öffne auf bibleserver.com
-            </a></small></p><p>${bibleText}</p>`;
+            </a></small></p>
+            <p>${bibleText}</p>`;
+        const strongsToString = (strongDefinitions) => {
+            return strongDefinitions.map((strongDefinition) => {
+                return `<span title="${strongDefinition.title} (${strongDefinition.description})">${strongDefinition.key}</span>`;
+            }).join(' ');
+        };
         const verseRangeToString = (verseRange) => {
-            return verseRange.map((verse) => `<small>${sanitizeHTML(verse.verse)}</small> ${sanitizeHTML(verse.text)}`).join(' ');
+            const verseTemplate = (verse) => `
+                <small>${sanitizeHTML(verse.verse)}</small>
+                ${sanitizeHTML(verse.text)}
+                <small>${strongsToString(strongRepo.getForVerse(verse))}</small>`;
+            return verseRange.map((verse) => verseTemplate(verse)).join(' ');
         };
 
         const flattenedVerses = [].concat(...nestedVerses);        

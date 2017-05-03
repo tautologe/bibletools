@@ -116,6 +116,23 @@
         };
     </script>
     <script>
+        const strongsRepo = {
+            getForVerse: (verse) => {
+                return [{
+                    key: "H1234", title: "בּקע", transliteration: "bâqa‛", pronounciation: "baw-kah'", description: "brechen",
+                    occurrences: [
+                        {title: "aufbrachen", references: ["1;7;11"]}
+                    ] 
+                }, {
+                    key: "G1234", title: "διαγογγύζω", transliteration: "diagogguzō", pronounciation: "dee-ag-ong-good'-zo", description: "murren",
+                    occurrences: [
+                        {title: "murrten", references: ["42;15;2", "42;19;7"]}
+                    ]
+                }];
+            }
+        };
+    </script>
+    <script>
         const bookNamesElement = window.document.getElementById('booknames');
         const outputElement = window.document.getElementById('results');
         const userInputElement = window.document.getElementById('user-input');
@@ -130,7 +147,7 @@
             userNotes.get,
             window.detect,
             window.reader.getVerse,
-            window.render.BibleTextRenderer(window, outputElement));
+            window.render.BibleTextRenderer(window, outputElement, strongsRepo));
         
         processUserInput();
         const scheduleProcessing = () => eventWorker.add(() => {
