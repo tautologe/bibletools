@@ -3,7 +3,7 @@
   "description": "Detecting bible links in a text",
   "version": "0.0.1",
   "scripts": {
-    "test": "mocha --compilers js:babel-register",
+    "test": "mocha --recursive --compilers js:babel-register",
     "build": "babel src --source-maps --out-file demo/bundle.js"
   },
   "devDependencies": {
