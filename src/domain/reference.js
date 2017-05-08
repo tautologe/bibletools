@@ -1,3 +1,11 @@
+class Reference {
+    constructor (book, from, to) {
+        this.book = book;
+        this.from = from;
+        this.to = to;
+    }
+}
+
 class CitationStyle {
     constructor (language = 'de', chapterVerseDelimiter=',', rangeDelimiter='-', verseDelimiter='.') {
         this.language = language;
@@ -129,7 +137,6 @@ class ReferenceParser {
             const bookRegExpString = `(${flattenArray(citationStyle.bookNames).map(_escapeForRegExp).join('|')})`;
             const regexString = createLinkRegexpString(bookRegExpString, false, true);
             const re = new RegExp(regexString);
-            console.log(re);
             return re;
         };
 
@@ -160,18 +167,18 @@ class ReferenceParser {
         const from = {chapter, verse: verseFrom};
         const to = matches[12] && {chapter: chapterTo, verse: verseTo};
 
-        const references = [{from, to}];
+        const references = [new Reference(book, from, to)];
         if (matches[14]) {
             const from = {chapter, verse: parseInt(matches[14])};
             const to = matches[18] && {chapter, verse: parseInt(matches[18])};
-            references.push({from, to});
+            references.push(new Reference(book, from, to));
         }
         if (matches[20]) {
             const from = {chapter, verse: parseInt(matches[20])};
             const to = matches[24] && {chapter, verse: parseInt(matches[24])};
-            references.push({from, to});
+            references.push(new Reference(book, from, to));
         }
-        return {book, references};
+        return references;
     }
 }
 
@@ -180,6 +187,6 @@ CitationStyle.DEFAULT = new CitationStyle();
 ReferenceParser.DEFAULT = new ReferenceParser(CitationStyle.DEFAULT);
 
 export {
-    ReferenceParser
+    Reference, ReferenceParser
 }
 
