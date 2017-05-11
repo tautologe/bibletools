@@ -14,6 +14,7 @@
             min-width: 280px; max-width: 750px;
         }
         .half-box > div { padding: 20px; }
+        .verseinfo { float: right; padding:10px; border-left: 1px solid gray; margin: 5px; clear: both; }
         #user-input { border: 1px dashed green;word-wrap: break-word; }
         #results { border: 1px dashed red; }
         #results:empty:not(:focus):before{content:attr(data-defaulttext)}
@@ -89,80 +90,5 @@
     </main>
     
     <script src="bundle.js"></script>
-    <script>
-        //TODO: extract to module
-        const getFragmentQuery = () => {
-            if (window.document.location.hash.length < 3) {
-                return;
-            }
-            const paramStrings = window.document.location.hash.substring(1).split('&');
-            return paramStrings.reduce((result, paramString) => {
-                if (paramString.indexOf('=') > 0) {
-                    const key = paramString.split('=')[0];
-                    const value = decodeURIComponent(paramString.split('=')[1]);
-                    result[key] = value;
-                }
-                return result;
-            }, {});
-        };
-
-        const hasFragmentQuery = () => getFragmentQuery() && getFragmentQuery()['q'] && getFragmentQuery()['q'].length > 1;
-
-        const restoreFromFragmentQuery = (inputElement) => {
-            const fragmentQuery = getFragmentQuery();
-            if (fragmentQuery && fragmentQuery['q'].length > 1) {
-                inputElement.innerText = fragmentQuery['q'];
-            }
-        };
-    </script>
-    <script>
-        const strongsRepo = {
-            getForVerse: (verse) => {
-                return [{
-                    key: "H1234", title: "בּקע", transliteration: "bâqa‛", pronounciation: "baw-kah'", description: "brechen",
-                    occurrences: [
-                        {title: "aufbrachen", references: ["1;7;11"]}
-                    ]
-                }, {
-                    key: "G1234", title: "διαγογγύζω", transliteration: "diagogguzō", pronounciation: "dee-ag-ong-good'-zo", description: "murren",
-                    occurrences: [
-                        {title: "murrten", references: ["42;15;2", "42;19;7"]}
-                    ]
-                }];
-            }
-        };
-    </script>
-    <script>
-        const bookNamesElement = window.document.getElementById('booknames');
-        const outputElement = window.document.getElementById('results');
-        const userInputElement = window.document.getElementById('user-input');
-        const eventWorker = window.eventWorker.EventWorker(window);
-        const userNotes = window.userNotes.UserNotes(window.localStorage, userInputElement);
-        if (hasFragmentQuery()) {
-            restoreFromFragmentQuery(userInputElement);
-        } else {
-            userNotes.restore();
-        }
-        const processUserInput = window.app.getInputProcessor(
-            userNotes.get,
-            window.render.BibleTextRenderer(window, outputElement, strongsRepo));
-        
-        processUserInput();
-        const scheduleProcessing = () => eventWorker.add(() => {
-            userNotes.save();
-            return processUserInput();
-        });
-        userInputElement.addEventListener("input", scheduleProcessing);
-        
-        window.addEventListener("hashchange", () => {
-            if (hasFragmentQuery()) {
-                restoreFromFragmentQuery(userInputElement);
-            } else {
-                userNotes.restore();
-            }
-            scheduleProcessing();
-        }); 
-        bookNamesElement.innerHTML = window.reference._bookNames.join(',');
-    </script>
 </body>
 </html>

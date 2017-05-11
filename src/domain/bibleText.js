@@ -14,6 +14,7 @@ class BibleText {
     }
 }
 
+// todo extract to util
 const JSONLoader = {
     load: (file) => new Promise(function(resolve, reject) {
         let req = new XMLHttpRequest();
