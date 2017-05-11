@@ -23,7 +23,7 @@ describe('bibleTextRepo', function () {
         const exampleReference = new Reference('Gen', {chapter: 1, verse: 2});
         return new BibleTextRepo(jsonLoaderStub).getFromReference(BibleModule.LUT1912, [exampleReference])
         .then((bibleText) => {
-            assert.deepEqual(bibleText, new BibleText([exampleReference], [[new Verse('Gen', 1, 2, "Und die Erde war wüst und leer, und es war finster auf der Tiefe; und der Geist Gottes schwebte auf dem Wasser.")]]))
+            assert.deepEqual(bibleText, new BibleText([exampleReference], [new Verse('Gen', 1, 2, "Und die Erde war wüst und leer, und es war finster auf der Tiefe; und der Geist Gottes schwebte auf dem Wasser.")]))
         });
     });
 
@@ -32,9 +32,9 @@ describe('bibleTextRepo', function () {
         const exampleReference = new Reference('Gen', {chapter: 1, verse: 1}, {chapter: 1, verse: 2});
         return new BibleTextRepo(jsonLoaderStub).getFromReference(BibleModule.LUT1912, [exampleReference])
         .then((bibleText) => {
-            assert.deepEqual(bibleText, new BibleText([exampleReference], [[
+            assert.deepEqual(bibleText, new BibleText([exampleReference], [
                 new Verse('Gen', 1, 1, EXAMPLE_CHAPTER.verses[0].text),
-                new Verse('Gen', 1, 2, EXAMPLE_CHAPTER.verses[1].text)]]))
+                new Verse('Gen', 1, 2, EXAMPLE_CHAPTER.verses[1].text)]))
         });
     });
 
@@ -47,8 +47,8 @@ describe('bibleTextRepo', function () {
         return new BibleTextRepo(jsonLoaderStub).getFromReference(BibleModule.LUT1912, exampleReferences)
         .then((bibleText) => {
             assert.deepEqual(bibleText, new BibleText(exampleReferences, [
-                [new Verse('Gen', 1, 1, EXAMPLE_CHAPTER.verses[0].text)],
-                [new Verse('Gen', 1, 2, EXAMPLE_CHAPTER.verses[1].text)]]))
+                new Verse('Gen', 1, 1, EXAMPLE_CHAPTER.verses[0].text),
+                new Verse('Gen', 1, 2, EXAMPLE_CHAPTER.verses[1].text)]))
         });
     });
 });

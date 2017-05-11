@@ -29,6 +29,7 @@ const JSONLoader = {
     })
 };
 
+const flattenArray = (arrays) => [].concat.apply([], arrays);
 
 class BibleTextRepo {
     constructor (JSONLoader) {
@@ -60,7 +61,7 @@ class BibleTextRepo {
 
     _getVersesFromChapter (references, chapterJson) {
         const verses = references.map((reference) => this._getVerseFromChapter(reference, chapterJson));
-        return new BibleText(references, verses);
+        return new BibleText(references, flattenArray(verses));
     }
     
     getFromReference (bibleModule, references) {
@@ -69,6 +70,8 @@ class BibleTextRepo {
         return this._getChapter(path).then((chapterJson) => this._getVersesFromChapter(references, chapterJson)).catch((err) => console.log(err));
     }
 }
+
+BibleTextRepo.DEFAULT = new BibleTextRepo(JSONLoader);
 
 
 export {
