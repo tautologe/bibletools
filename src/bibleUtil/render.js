@@ -1,5 +1,5 @@
 const BibleTextRenderer = function (_window, outputElement, strongRepo) {
-    const renderBibleReferences = (rawReference, nestedVerses) => {
+    const renderBibleReferences = (rawReference, bibleText) => {
         const uriEscapeReference = (reference) => encodeURIComponent(reference.replace(/\s/g, ''));
         const generateBibleServerLink = (reference) => `https://bibleserver.com/text/LUT/${uriEscapeReference(reference)}`;
         const sanitizeHTML = (unsafeString) => {
@@ -17,16 +17,15 @@ const BibleTextRenderer = function (_window, outputElement, strongRepo) {
                 return `<span title="${strongDefinition.title} (${strongDefinition.description})">${strongDefinition.key}</span>`;
             }).join(' ');
         };
-        const verseRangeToString = (verseRange) => {
+        const verseRangeToString = (verses) => {
             const verseTemplate = (verse) => `
                 <small>${sanitizeHTML(verse.verse)}</small>
                 ${sanitizeHTML(verse.text)}
                 <small>${strongsToString(strongRepo.getForVerse(verse))}</small>`;
-            return verseRange.map((verse) => verseTemplate(verse)).join(' ');
+            return verses.map((verse) => verseTemplate(verse)).join(' ');
         };
-
-        const flattenedVerses = [].concat(...nestedVerses);        
-        return referenceTemplate(rawReference, verseRangeToString(flattenedVerses));
+    
+        return referenceTemplate(rawReference, verseRangeToString(bibleText.verses));
     };
     const displayBibleVerses = (flattenedVerses) => outputElement.innerHTML = flattenedVerses.join('');
     

@@ -122,7 +122,7 @@
                     key: "H1234", title: "בּקע", transliteration: "bâqa‛", pronounciation: "baw-kah'", description: "brechen",
                     occurrences: [
                         {title: "aufbrachen", references: ["1;7;11"]}
-                    ] 
+                    ]
                 }, {
                     key: "G1234", title: "διαγογγύζω", transliteration: "diagogguzō", pronounciation: "dee-ag-ong-good'-zo", description: "murren",
                     occurrences: [
@@ -145,8 +145,6 @@
         }
         const processUserInput = window.app.getInputProcessor(
             userNotes.get,
-            window.detect,
-            window.reader.getVerse,
             window.render.BibleTextRenderer(window, outputElement, strongsRepo));
         
         processUserInput();
@@ -164,7 +162,7 @@
             }
             scheduleProcessing();
         }); 
-        bookNamesElement.innerHTML = window.detect._booknames.join(',');
+        bookNamesElement.innerHTML = window.reference._bookNames.join(',');
     </script>
 </body>
 </html>
