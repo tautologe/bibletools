@@ -40,8 +40,8 @@ const referenceToRefKey = (reference) => {
 const refKeyToReference = (refKey) => {
     const refParts = refKey.split(';');
     const verses = refParts[2].split('-');
-    const from = {chapter: refParts[1], verse: verses[0]}
-    const to = verses[1] && {chapter: refParts[1], verse: verses[1]};
+    const from = {chapter: refParts[1], verse: verses[0] > 0 ? verses[0] : null}
+    const to = (verses[0] && verses[1] && {chapter: refParts[1], verse: verses[1]}) || null;
     return new Reference(bookIndex[refParts[0]], from, to);
 }
 

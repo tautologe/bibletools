@@ -6,7 +6,7 @@ class Reference {
     }
 
     toString () {
-        const from = `${this.book} ${this.from.chapter},${this.from.verse}`;
+        const from = this.from.verse ? `${this.book} ${this.from.chapter},${this.from.verse}` : `${this.book} ${this.from.chapter}`;
         const to = () => {
             if (!this.to) {
                 return '';

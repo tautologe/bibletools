@@ -19,14 +19,12 @@ const BibleTextRenderer = function (_window, outputElement) {
             }).join(' ');
         };
         const crossReferencesToString = (crossReferences) => {
-            console.log(crossReferences);
-            return crossReferences ? `<small>[${crossReferences.fromReference.from.verse}] ` +
-                crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('<br/>') + '</small>' : '';
-            // return `${crossReferences}`;
+            return crossReferences ? `<div class="verseinfo"><small>[${crossReferences.fromReference.from.verse}] ` +
+                crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('<br/>') + '</small></div>' : '';
         };
         const verseRangeToString = (verses) => {
             const verseTemplate = (verse) => `
-                <div class="verseinfo">${crossReferencesToString(verse.crossReferences)}</div>
+                ${crossReferencesToString(verse.crossReferences)}
                 <small>${sanitizeHTML(verse.verse)}</small>
                 ${sanitizeHTML(verse.text)}`;
             return verses.map((verse) => verseTemplate(verse)).join(' ');
