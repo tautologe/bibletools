@@ -11,14 +11,19 @@
             flex: 1; display: flex; flex-direction: column;
             justify-content: top;
             margin: 20px;
-            min-width: 280px; max-width: 750px;
+            min-width: 800px; max-width: 1400px;
         }
         .half-box > div { padding: 20px; }
-        .verseinfo { float: right; padding:10px; border-left: 1px solid gray; margin: 5px; clear: both; }
+        .verseinfo { 
+            width: 150px; float: right; padding:10px; /*border-left: 1px solid gray*/ 
+            background-color: lightgoldenrodyellow; margin-left: 5px;
+            clear: both; }
         #user-input { border: 1px dashed green;word-wrap: break-word; }
         #results { border: 1px dashed red; }
         #results:empty:not(:focus):before{content:attr(data-defaulttext)}
         #booknames { font-size: 0.6em; overflow-wrap: break-word; }
+        #detected-json { height: 100px; overflow: auto; display: none; }
+        .referenceWithText { clear: right; }
     </style>
 <body>
     <main>

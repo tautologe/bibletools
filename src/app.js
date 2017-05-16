@@ -1,12 +1,13 @@
 import {ReferenceParser, _bookNames} from './domain/reference';
 import {BibleTextRepo} from './domain/bibleText';
-import {BibleModule} from './domain/bibleModule.js';
+import {BibleModule} from './domain/bibleModule';
+import {CrossReferenceRepo} from './domain/crossReference';
 
 const getInputProcessor = (getUserInput, bibleTextRenderer) => {
     const getBibleTextForReference = ({raw, resolved}) => {
-        return BibleTextRepo.DEFAULT.getFromReference(BibleModule.LUT1912, resolved).then((bibleText) => {
-            return bibleTextRenderer.renderBibleReferences(raw, bibleText);
-        });
+        return BibleTextRepo.DEFAULT.getFromReference(BibleModule.LUT1912, resolved)
+            .then((bibleText) => CrossReferenceRepo.DEFAULT.enrichBibleTextWithReferences(bibleText))
+            .then((enrichedBibleText) => bibleTextRenderer.renderBibleReferences(raw, enrichedBibleText));
     };
 
     const detectBibleReferencesInUserInput = () => {
@@ -44,55 +45,55 @@ const restoreFromFragmentQuery = (inputElement) => {
 };
 
 const strongsRepo = {
-            getForVerse: (verse) => {
-                return [{
-                    key: "H1234", title: "בּקע", transliteration: "bâqa‛", pronounciation: "baw-kah'", description: "brechen",
-                    occurrences: [
-                        {title: "aufbrachen", references: ["1;7;11"]}
-                    ]
-                }, {
-                    key: "G1234", title: "διαγογγύζω", transliteration: "diagogguzō", pronounciation: "dee-ag-ong-good'-zo", description: "murren",
-                    occurrences: [
-                        {title: "murrten", references: ["42;15;2", "42;19;7"]}
-                    ]
-                }];
-            }
-        };
+    getForVerse: (verse) => {
+        return [{
+            key: "H1234", title: "בּקע", transliteration: "bâqa‛", pronounciation: "baw-kah'", description: "brechen",
+            occurrences: [
+                {title: "aufbrachen", references: ["1;7;11"]}
+            ]
+        }, {
+            key: "G1234", title: "διαγογγύζω", transliteration: "diagogguzō", pronounciation: "dee-ag-ong-good'-zo", description: "murren",
+            occurrences: [
+                {title: "murrten", references: ["42;15;2", "42;19;7"]}
+            ]
+        }];
+    }
+};
 
-        import {EventWorker} from './eventWorker';
-        import {UserNotes} from './userNotes';
-        import {BibleTextRenderer} from './bibleUtil/render'
+import {EventWorker} from './eventWorker';
+import {UserNotes} from './userNotes';
+import {BibleTextRenderer} from './bibleUtil/render'
 
-        const bookNamesElement = window.document.getElementById('booknames');
-        const outputElement = window.document.getElementById('results');
-        const userInputElement = window.document.getElementById('user-input');
-        const eventWorker = EventWorker(window);
-        const userNotes = UserNotes(window.localStorage, userInputElement);
-        if (hasFragmentQuery()) {
-            restoreFromFragmentQuery(userInputElement);
-        } else {
-            userNotes.restore();
-        }
-        const processUserInput = getInputProcessor(
-            userNotes.get,
-            BibleTextRenderer(window, outputElement, strongsRepo));
-        
-        processUserInput();
-        const scheduleProcessing = () => eventWorker.add(() => {
-            userNotes.save();
-            return processUserInput();
-        });
-        userInputElement.addEventListener("input", scheduleProcessing);
-        
-        window.addEventListener("hashchange", () => {
-            if (hasFragmentQuery()) {
-                restoreFromFragmentQuery(userInputElement);
-            } else {
-                userNotes.restore();
-            }
-            scheduleProcessing();
-        }); 
-        bookNamesElement.innerHTML = _bookNames.join(',');
+const bookNamesElement = window.document.getElementById('booknames');
+const outputElement = window.document.getElementById('results');
+const userInputElement = window.document.getElementById('user-input');
+const eventWorker = EventWorker(window);
+const userNotes = UserNotes(window.localStorage, userInputElement);
+if (hasFragmentQuery()) {
+    restoreFromFragmentQuery(userInputElement);
+} else {
+    userNotes.restore();
+}
+const processUserInput = getInputProcessor(
+    userNotes.get,
+    BibleTextRenderer(window, outputElement));
+
+processUserInput();
+const scheduleProcessing = () => eventWorker.add(() => {
+    userNotes.save();
+    return processUserInput();
+});
+userInputElement.addEventListener("input", scheduleProcessing);
+
+window.addEventListener("hashchange", () => {
+    if (hasFragmentQuery()) {
+        restoreFromFragmentQuery(userInputElement);
+    } else {
+        userNotes.restore();
+    }
+    scheduleProcessing();
+}); 
+bookNamesElement.innerHTML = _bookNames.join(',');
 
 export {
     getInputProcessor

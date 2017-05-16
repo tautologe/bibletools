@@ -7,6 +7,13 @@ class Verse {
     }
 }
 
+class RichVerse extends Verse {
+    constructor (book, chapter, verse, text, crossReferences) {
+        super(book, chapter, verse, text);
+        this.crossReferences = crossReferences;
+    }
+}
+
 class BibleText {
     constructor (references, verses) {
         this.references = references;
@@ -76,6 +83,6 @@ BibleTextRepo.DEFAULT = new BibleTextRepo(JSONLoader);
 
 
 export {
-    Verse, BibleText, BibleTextRepo 
+    Verse, RichVerse, BibleText, BibleTextRepo 
 };
 

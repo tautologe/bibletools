@@ -4,6 +4,22 @@ class Reference {
         this.from = from;
         this.to = to;
     }
+
+    toString () {
+        const from = `${this.book} ${this.from.chapter},${this.from.verse}`;
+        const to = () => {
+            if (!this.to) {
+                return '';
+            }
+            let to = '';
+            if (this.to.chapter !== this.from.chapter) {
+                to += this.to.chapter + ',';
+            }
+            to += '-' + this.to.verse;
+            return to;
+        }
+        return `${from}${to()}`
+    }
 }
 
 const _bookNames = [
