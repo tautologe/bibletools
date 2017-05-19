@@ -21,22 +21,6 @@ class BibleText {
     }
 }
 
-// todo extract to util
-const JSONLoader = {
-    load: (file) => new Promise(function(resolve, reject) {
-        let req = new XMLHttpRequest();
-        req.open('GET', file, true);
-        req.onload = () => {
-            if (req.status == '200') {
-                resolve(JSON.parse(req.responseText));
-            } else {
-                reject(Error(req.statusText))
-            }
-        };
-        req.send();
-    })
-};
-
 const flattenArray = (arrays) => [].concat.apply([], arrays);
 
 class BibleTextRepo {
@@ -78,9 +62,6 @@ class BibleTextRepo {
         return this._getChapter(path).then((chapterJson) => this._getVersesFromChapter(references, chapterJson)).catch((err) => console.log(err));
     }
 }
-
-BibleTextRepo.DEFAULT = new BibleTextRepo(JSONLoader);
-
 
 export {
     Verse, RichVerse, BibleText, BibleTextRepo 
