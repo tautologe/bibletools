@@ -1,5 +1,5 @@
 import {Reference} from './reference';
-import {RichVerse, BibleText} from './bibleText';
+import {BibleText} from './bibleText';
 
 
 class CrossReferences {
@@ -46,7 +46,7 @@ class CrossReferenceRepo {
 
     enrichVerseWithCrossReferences (verse) {
         return this.getOutgoingReferences(new Reference(verse.book, { chapter: verse.chapter, verse: verse.verse }))
-            .then((crossReferences) => new RichVerse(verse.book, verse.chapter, verse.verse, verse.text, crossReferences))
+            .then((crossReferences) => verse.withCrossReferences(crossReferences))
     }
 
     enrichBibleTextWithReferences (bibleText) {

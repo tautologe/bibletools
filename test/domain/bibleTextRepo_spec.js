@@ -18,12 +18,21 @@ describe('bibleTextRepo', function () {
         ]
     };
 
+    const EXAMPLE_CHAPTER_WITH_STRONGS = {
+        chapter: 1,
+        verses: [
+            { "verse": 1, "text": "Am Anfang schuf Gott Himmel und Erde.", strongs: ["H1234","H2345"]},
+            { "verse": 2, "text": "Und die Erde war wüst und leer, und es war finster auf der Tiefe; und der Geist Gottes schwebte auf dem Wasser."}
+        ]
+    };
+
     it('should request the correct chapters', function () {
         const jsonLoaderStub = getJsonLoaderStub('bible/1Mo/1.json', EXAMPLE_CHAPTER);
         const exampleReference = new Reference('Gen', {chapter: 1, verse: 2});
         return new BibleTextRepo(jsonLoaderStub).getFromReference(BibleModule.LUT1912, [exampleReference])
         .then((bibleText) => {
-            assert.deepEqual(bibleText, new BibleText([exampleReference], [new Verse('Gen', 1, 2, "Und die Erde war wüst und leer, und es war finster auf der Tiefe; und der Geist Gottes schwebte auf dem Wasser.")]))
+            assert.deepEqual(bibleText, new BibleText([exampleReference], 
+            [new Verse('Gen', 1, 2, "Und die Erde war wüst und leer, und es war finster auf der Tiefe; und der Geist Gottes schwebte auf dem Wasser.")]))
         });
     });
 
@@ -51,4 +60,19 @@ describe('bibleTextRepo', function () {
                 new Verse('Gen', 1, 2, EXAMPLE_CHAPTER.verses[1].text)]))
         });
     });
+
+    it('should return the verse with Strong references', function () {
+        const jsonLoaderStub = getJsonLoaderStub('bible/1Mo/1.json', EXAMPLE_CHAPTER_WITH_STRONGS);
+        const exampleReferences = [
+            new Reference('Gen', {chapter: 1, verse: 1}),
+            new Reference('Gen', {chapter: 1, verse: 2})
+        ];
+        return new BibleTextRepo(jsonLoaderStub).getFromReference(BibleModule.LUT1912, exampleReferences)
+        .then((bibleText) => {
+            assert.deepEqual(bibleText, new BibleText(exampleReferences, [
+                new Verse('Gen', 1, 1, EXAMPLE_CHAPTER.verses[0].text, [], ["H1234", "H2345"]),
+                new Verse('Gen', 1, 2, EXAMPLE_CHAPTER.verses[1].text)]))
+        });
+
+    })
 });

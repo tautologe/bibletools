@@ -4,6 +4,9 @@
   xmlns="http://www.w3.org/1999/xhtml">
   <xsl:output method="text" encoding="UTF-8" media-type="text/plain"/>
 
+<xsl:param name="externalStrongBibleFileName"/>
+<xsl:variable name="externalStrongBible" select="document($externalStrongBibleFileName)" />
+
 <xsl:template match="BIBLEBOOK">
     <xsl:apply-templates />
     <xsl:result-document href="output/{@bsname}/meta.json" method="text">
@@ -32,9 +35,37 @@
     <xsl:value-of select="@vnumber" />
     <xsl:text>, "text": "</xsl:text>
     <xsl:apply-templates />
-    <xsl:text>"}</xsl:text>
+    <xsl:text>", "strongs": [</xsl:text>
+    <xsl:choose>
+        <xsl:when test="$externalStrongBible">
+            <xsl:apply-templates select="$externalStrongBible/XMLBIBLE/BIBLEBOOK[
+                @bnumber = current()/../../@bnumber]/CHAPTER[@cnumber = current()/../@cnumber]/VERS[@vnumber=current()/@vnumber]/gr"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:apply-templates select="./gr"/>
+        </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>]}</xsl:text>
     <xsl:if test="count(following-sibling::VERS[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
 </xsl:template>
+
+<xsl:template match="gr">
+    <xsl:text>"</xsl:text>
+    <xsl:apply-templates select="../../.." mode="language" />
+    <xsl:value-of select="@str" />
+    <xsl:text>"</xsl:text>
+    <xsl:if test="count(following-sibling::gr[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+</xsl:template>
+
+<xsl:template match="BIBLEBOOK" mode="language">
+    <xsl:choose>
+        <xsl:when test="@bnumber &lt; 40"><xsl:text>H</xsl:text></xsl:when>
+        <xsl:otherwise><xsl:text>G</xsl:text></xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+
+<xsl:template match="INFORMATION" />
 
 <xsl:template match="text()">
     <xsl:call-template name="replace">

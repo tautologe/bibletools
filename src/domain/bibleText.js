@@ -1,16 +1,19 @@
 class Verse {
-    constructor (book, chapter, verse, text) {
+    constructor (book, chapter, verse, text, crossReferences = [], strongReferences = []) {
         this.text = text;
         this.book = book;
         this.chapter = chapter;
         this.verse = verse;
+        this.crossReferences = crossReferences,
+        this.strongReferences = Array.from(new Set(strongReferences))
     }
-}
 
-class RichVerse extends Verse {
-    constructor (book, chapter, verse, text, crossReferences) {
-        super(book, chapter, verse, text);
-        this.crossReferences = crossReferences;
+    withStrongReferences (strongReferences) {
+        return new Verse(this.book, this.chapter, this.verse, this.text, [], strongReferences)
+    }
+
+    withCrossReferences (crossReferences) {
+        return new Verse(this.book, this.chapter, this.verse, this.text, crossReferences, this.strongReferences)
     }
 }
 
@@ -47,7 +50,7 @@ class BibleTextRepo {
 
         // TODO this format should be already in raw data
         return verses.map((verse) => {
-            return new Verse(reference.book, reference.from.chapter, verse.verse, verse.text);
+            return new Verse(reference.book, reference.from.chapter, verse.verse, verse.text, null, verse.strongs);
         });
     }
 
@@ -64,6 +67,6 @@ class BibleTextRepo {
 }
 
 export {
-    Verse, RichVerse, BibleText, BibleTextRepo 
+    Verse, BibleText, BibleTextRepo 
 };
 

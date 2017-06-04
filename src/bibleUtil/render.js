@@ -18,13 +18,24 @@ const BibleTextRenderer = function (_window, outputElement) {
                 return `<span title="${strongDefinition.title} (${strongDefinition.description})">${strongDefinition.key}</span>`;
             }).join(' ');
         };
+        const strongReferencesToString = (strongReferences) => {
+            return strongReferences.map((strongReference) => {
+                return `<span title="${strongReference})">${strongReference}</span>`;
+            }).join(' ');
+        };
         const crossReferencesToString = (crossReferences) => {
-            return crossReferences ? `<div class="verseinfo"><small>[${crossReferences.fromReference.from.verse}] ` +
-                crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('<br/>') + '</small></div>' : '';
+            if (!crossReferences || !crossReferences.fromReference) {
+                return '';
+            }
+            return `<small>[${crossReferences.fromReference.from.verse}] ` +
+                crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('<br/>') + '</small>';
         };
         const verseRangeToString = (verses) => {
             const verseTemplate = (verse) => `
+                <div class="verseinfo">
+                ${strongReferencesToString(verse.strongReferences.sort())}
                 ${crossReferencesToString(verse.crossReferences)}
+                </div>
                 <small>${sanitizeHTML(verse.verse)}</small>
                 ${sanitizeHTML(verse.text)}`;
             return verses.map((verse) => verseTemplate(verse)).join(' ');
