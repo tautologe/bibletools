@@ -20,7 +20,7 @@ const BibleTextRenderer = function (_window, outputElement) {
         };
         const strongReferencesToString = (strongReferences) => {
             return strongReferences.map((strongReference) => {
-                return `<span title="${strongReference})">${strongReference}</span>`;
+                return `<span title="${strongReference}">${strongReference}</span>`;
             }).join(' ');
         };
         const crossReferencesToString = (crossReferences) => {
