@@ -6,15 +6,21 @@
   xmlns="http://www.w3.org/1999/xhtml">
     <xsl:output method="text" encoding="UTF-8" media-type="text/plain"/>
 
+    <xsl:variable name="strongDict" select="document('../../../strong.xml')" />
+
     <xsl:template match="dictionary">
+        <!--<xsl:message><xsl:value-of select="$strongDict"/></xsl:message>-->
         <xsl:text>{"items": [</xsl:text><xsl:apply-templates /><xsl:text>]}</xsl:text>
     </xsl:template>
     
     <xsl:template match="item">
+        <xsl:variable name="strongDictItem" select="$strongDict/dictionary/item[@id=current()/@id]" />
         <xsl:text>{ "id": "</xsl:text><xsl:value-of select="@id" /><xsl:text>",</xsl:text>
-        <xsl:text>"original": "</xsl:text><xsl:value-of select="./title" /><xsl:text>",</xsl:text>
-        <xsl:text>"translations": [</xsl:text><xsl:apply-templates select="./description/title" /><xsl:text>]</xsl:text>
-        <xsl:apply-templates select="item/description/title" />
+        <xsl:text>"title_konk": "</xsl:text><xsl:value-of select="./title" /><xsl:text>",</xsl:text>
+        <xsl:text>"title_strongs": "</xsl:text><xsl:value-of select="$strongDictItem/title" /><xsl:text>",</xsl:text>
+        <xsl:text>"transliteration": "</xsl:text><xsl:value-of select="$strongDictItem/transliteration" /><xsl:text>",</xsl:text>
+        <xsl:text>"germanDescription": [</xsl:text><xsl:apply-templates select="./description/title" /><xsl:text>],</xsl:text>
+        <xsl:text>"englishDescription": [</xsl:text><xsl:apply-templates select="$strongDictItem/description" /><xsl:text>]</xsl:text>
         <xsl:text>}</xsl:text>
         <xsl:if test="count(following-sibling::item[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
     </xsl:template>
@@ -23,6 +29,12 @@
         <xsl:text>"</xsl:text><xsl:apply-templates /><xsl:text>"</xsl:text>
         <xsl:if test="count(../following-sibling::description[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
     </xsl:template>
+
+    <xsl:template match="/dictionary/item/description">
+        <xsl:text>"</xsl:text><xsl:apply-templates /><xsl:text>"</xsl:text>
+        <xsl:if test="count(../following-sibling::description[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+    </xsl:template>
+
 
 <xsl:template match="text()">
     <xsl:call-template name="replace">

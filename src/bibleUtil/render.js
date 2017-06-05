@@ -27,14 +27,17 @@ const BibleTextRenderer = function (_window, outputElement) {
             if (!crossReferences || !crossReferences.fromReference) {
                 return '';
             }
-            return `<small>[${crossReferences.fromReference.from.verse}] ` +
-                crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('<br/>') + '</small>';
+            return crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('; ');
         };
         const verseRangeToString = (verses) => {
             const verseTemplate = (verse) => `
                 <div class="verseinfo">
-                ${strongReferencesToString(verse.strongReferences.sort())}
-                ${crossReferencesToString(verse.crossReferences)}
+                    [${verse.verse}]
+                    <span class="strongReferences">
+                    ${strongReferencesToString(verse.strongReferences.sort())}
+                    </span><br /><span class="crossReferences">
+                    ${crossReferencesToString(verse.crossReferences)}
+                    </span>
                 </div>
                 <small>${sanitizeHTML(verse.verse)}</small>
                 ${sanitizeHTML(verse.text)}`;
