@@ -16,28 +16,30 @@ const BibleTextRenderer = function (_window, outputElement) {
             </a></small></p>
             <p>${bibleText}</p></div>`;
         const strongReferencesToString = (strongReferences) => {
-            return strongReferences.map((strongReference) => {
-                return `<span class="strongReference" data-strongkey="${strongReference}">${strongReference}</span>`;
-            }).join(' ');
+            if (!strongReferences || strongReferences.length == 0) {
+                return '';
+            }
+            return '<span class="strongReferences">[#] ' +
+                strongReferences.map((strongReference) => {
+                    return `<span class="strongReference" data-strongkey="${strongReference}">${strongReference}</span>`;
+                }).join(' ') +
+                '</span><span class="strongDefinition"></span>';
         };
         const crossReferencesToString = (crossReferences) => {
             if (!crossReferences || !crossReferences.fromReference) {
                 return '';
             }
-            return crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('; ');
+            return '<span class="crossReferences">[=&gt;] ' +
+                    crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('; ') +
+                    '</span><br />';
         };
         const verseRangeToString = (verses) => {
             const verseTemplate = (verse) => `
                 <small>${sanitizeHTML(verse.verse)}</small>
                 ${sanitizeHTML(verse.text)}
                 <div class="verseinfo">
-                    [${verse.verse}]
-                    <span class="crossReferences">
                     ${crossReferencesToString(verse.crossReferences)}
-                    </span><br /><span class="strongReferences">
                     ${strongReferencesToString(verse.strongReferences)}
-                    </span>
-                    <span class="strongDefinition"></span>
                 </div>`;
             return verses.map((verse) => verseTemplate(verse)).join(' ');
         };
