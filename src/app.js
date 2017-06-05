@@ -7,9 +7,11 @@ import {EventWorker} from './util/eventWorker';
 import {JSONLoader} from './util/jsonLoader';
 import {UserNotes} from './userNotes';
 import {BibleTextRenderer} from './bibleUtil/render';
+import {StrongRepo} from './domain/strongs'
 
 const crossReferenceRepo = new CrossReferenceRepo(JSONLoader);
 const bibleTextRepo = new BibleTextRepo(JSONLoader);
+const strongRepo = new StrongRepo(JSONLoader);
 
 const getInputProcessor = (getUserInput, bibleTextRenderer) => {
     const getBibleTextForReference = ({raw, resolved}) => {
@@ -27,8 +29,6 @@ const getInputProcessor = (getUserInput, bibleTextRenderer) => {
     return detectBibleReferencesInUserInput;
 };
 
-
-
 const bookNamesElement = window.document.getElementById('booknames');
 const outputElement = window.document.getElementById('results');
 const userInputElement = window.document.getElementById('user-input');
@@ -41,9 +41,19 @@ if (locationFragment.hasParameter('q')) {
 } else {
     userNotes.restore();
 }
+const bibleTextRenderer = BibleTextRenderer(window, outputElement);
 const processUserInput = getInputProcessor(
     userNotes.get,
-    BibleTextRenderer(window, outputElement));
+    bibleTextRenderer);
+
+window.document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('strongReference')) {
+        const strongDefinitionView = e.target.closest('.verseinfo').getElementsByClassName('strongDefinition')[0];
+        strongRepo.getItem(e.target.dataset.strongkey).then((strongDefinition) => {
+            return bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionView);
+        });
+    }
+}, false);
 
 processUserInput();
 const scheduleProcessing = () => eventWorker.add(() => {

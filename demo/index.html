@@ -19,6 +19,18 @@
             background-color: lightgoldenrodyellow; margin-left: 5px;
             font-size: 80%;
             clear: both; }
+        .strongReference {
+            cursor: pointer;
+        }
+        .strongReference:hover {
+            text-decoration: underline;
+        }
+        .strongDefinition {
+            display: block;
+        }
+        .strongDefinition h1 {
+            font-size: 120%;
+        }
         #user-input { border: 1px dashed green;word-wrap: break-word; }
         #results { border: 1px dashed red; }
         #results:empty:not(:focus):before{content:attr(data-defaulttext)}

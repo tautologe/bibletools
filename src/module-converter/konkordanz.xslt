@@ -9,20 +9,22 @@
     <xsl:variable name="strongDict" select="document('../../../strong.xml')" />
 
     <xsl:template match="dictionary">
-        <!--<xsl:message><xsl:value-of select="$strongDict"/></xsl:message>-->
-        <xsl:text>{"items": [</xsl:text><xsl:apply-templates /><xsl:text>]}</xsl:text>
+        <xsl:apply-templates />
     </xsl:template>
     
     <xsl:template match="item">
         <xsl:variable name="strongDictItem" select="$strongDict/dictionary/item[@id=current()/@id]" />
-        <xsl:text>{ "id": "</xsl:text><xsl:value-of select="@id" /><xsl:text>",</xsl:text>
-        <xsl:text>"title_konk": "</xsl:text><xsl:value-of select="./title" /><xsl:text>",</xsl:text>
-        <xsl:text>"title_strongs": "</xsl:text><xsl:value-of select="$strongDictItem/title" /><xsl:text>",</xsl:text>
-        <xsl:text>"transliteration": "</xsl:text><xsl:value-of select="$strongDictItem/transliteration" /><xsl:text>",</xsl:text>
-        <xsl:text>"germanDescription": [</xsl:text><xsl:apply-templates select="./description/title" /><xsl:text>],</xsl:text>
-        <xsl:text>"englishDescription": [</xsl:text><xsl:apply-templates select="$strongDictItem/description" /><xsl:text>]</xsl:text>
-        <xsl:text>}</xsl:text>
-        <xsl:if test="count(following-sibling::item[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+
+        <xsl:result-document href="output/strong/{@id}.json" method="text">
+            <xsl:text>{ "id": "</xsl:text><xsl:value-of select="@id" /><xsl:text>",&#xa;</xsl:text>
+            <xsl:text>"title_konk": "</xsl:text><xsl:value-of select="./title" /><xsl:text>",&#xa;</xsl:text>
+            <xsl:text>"title_strongs": "</xsl:text><xsl:value-of select="$strongDictItem/title" /><xsl:text>",&#xa;</xsl:text>
+            <xsl:text>"transliteration": "</xsl:text><xsl:value-of select="$strongDictItem/transliteration" /><xsl:text>",&#xa;</xsl:text>
+            <xsl:text>"germanDescription": [</xsl:text><xsl:apply-templates select="./description/title" /><xsl:text>],&#xa;</xsl:text>
+            <xsl:text>"englishDescription": [</xsl:text><xsl:apply-templates select="$strongDictItem/description" /><xsl:text>],&#xa;</xsl:text>
+            <xsl:text>"occurrences": [</xsl:text><xsl:apply-templates select="./description/reflink" /><xsl:text>]</xsl:text>
+            <xsl:text>}</xsl:text>
+        </xsl:result-document>
     </xsl:template>
 
     <xsl:template match="item/description/title">
@@ -33,6 +35,11 @@
     <xsl:template match="/dictionary/item/description">
         <xsl:text>"</xsl:text><xsl:apply-templates /><xsl:text>"</xsl:text>
         <xsl:if test="count(../following-sibling::description[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+    </xsl:template>
+
+    <xsl:template match="item/description/reflink">
+        <xsl:text>"</xsl:text><xsl:value-of select="@mscope" /><xsl:text>"</xsl:text>
+        <xsl:if test="count(../following-sibling::reflink[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
     </xsl:template>
 
 
