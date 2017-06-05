@@ -28,23 +28,7 @@ const refKeyToReference = (refKey) => {
     const from = {chapter: refParts[1], verse: verses[0] > 0 ? verses[0] : null}
     const to = (verses[0] && verses[1] && {chapter: refParts[1], verse: verses[1]}) || null;
     return new Reference(bookIndex[refParts[0]], from, to);
-}
-
-// const strongsRepo = {
-//     getForVerse: (verse) => {
-//         return [{
-//             key: "H1234", title: "בּקע", transliteration: "bâqa‛", pronounciation: "baw-kah'", description: "brechen",
-//             occurrences: [
-//                 {title: "aufbrachen", references: ["1;7;11"]}
-//             ]
-//         }, {
-//             key: "G1234", title: "διαγογγύζω", transliteration: "diagogguzō", pronounciation: "dee-ag-ong-good'-zo", description: "murren",
-//             occurrences: [
-//                 {title: "murrten", references: ["42;15;2", "42;19;7"]}
-//             ]
-//         }];
-//     }
-// };
+};
 
 class StrongRepo {
     constructor (JSONLoader) {
@@ -63,7 +47,8 @@ class StrongRepo {
                 jsonItem.transliteration, 
                 '',
                 jsonItem.englishDescription,
-                jsonItem.occurrences.map((refKey) => refKeyToReference(refKey)));
+                jsonItem.occurrences.map((occurrence) => occurrence.references.map((refKey) => refKeyToReference(refKey)))
+            );
         });
     }
 }

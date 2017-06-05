@@ -1,5 +1,4 @@
 <!-- Convert Zefania Konkordanz to JSON format -->
-<!-- TODO: link references -->
 <xsl:stylesheet
   version="2.0" 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
@@ -22,7 +21,7 @@
             <xsl:text>"transliteration": "</xsl:text><xsl:value-of select="$strongDictItem/transliteration" /><xsl:text>",&#xa;</xsl:text>
             <xsl:text>"germanDescription": [</xsl:text><xsl:apply-templates select="./description/title" /><xsl:text>],&#xa;</xsl:text>
             <xsl:text>"englishDescription": [</xsl:text><xsl:apply-templates select="$strongDictItem/description" /><xsl:text>],&#xa;</xsl:text>
-            <xsl:text>"occurrences": [</xsl:text><xsl:apply-templates select="./description/reflink" /><xsl:text>]</xsl:text>
+            <xsl:text>"occurrences": [</xsl:text><xsl:apply-templates select="./description[title]" mode="occurrences"/><xsl:text>]</xsl:text>
             <xsl:text>}</xsl:text>
         </xsl:result-document>
     </xsl:template>
@@ -37,11 +36,22 @@
         <xsl:if test="count(../following-sibling::description[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
     </xsl:template>
 
-    <xsl:template match="item/description/reflink">
-        <xsl:text>"</xsl:text><xsl:value-of select="@mscope" /><xsl:text>"</xsl:text>
-        <xsl:if test="count(../following-sibling::reflink[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+    <xsl:template match="item/description" mode="occurrences">
+        <xsl:text>{</xsl:text>
+        <xsl:text>"title": "</xsl:text><xsl:apply-templates select="./title" mode="occurrences"/><xsl:text>",</xsl:text>
+        <xsl:text>"references": [</xsl:text><xsl:apply-templates select="./reflink" /><xsl:text>]</xsl:text>
+        <xsl:text>}</xsl:text>
+        <xsl:if test="count(following-sibling::description[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
     </xsl:template>
 
+    <xsl:template match="item/description/title" mode="occurrences">
+        <xsl:apply-templates select="text()" />
+    </xsl:template>
+
+    <xsl:template match="item/description/reflink">
+        <xsl:text>"</xsl:text><xsl:value-of select="@mscope" /><xsl:text>"</xsl:text>
+        <xsl:if test="count(following-sibling::reflink[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+    </xsl:template>
 
 <xsl:template match="text()">
     <xsl:call-template name="replace">
