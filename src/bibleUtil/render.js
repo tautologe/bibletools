@@ -51,7 +51,10 @@ const BibleTextRenderer = function (_window, outputElement) {
     const displayStrongDefinition = (strongDefinition, strongView) => {
         strongView.innerHTML = `<h1>${sanitizeHTML(strongDefinition.key)}: ${sanitizeHTML(strongDefinition.title)}
         (${sanitizeHTML(strongDefinition.transliteration)})</h1>
-        ${sanitizeHTML(strongDefinition.description)}`;
+        ${sanitizeHTML(strongDefinition.description)}
+        <h2>In der Bibel übersetzt mit</h2>
+        ${sanitizeHTML(strongDefinition.occurrences.map((occurrence) => occurrence.title.replace(/\([^)]*\)/, '').trim()).join(', '))}
+        `;
     };
     
     return {renderBibleReferences, displayBibleVerses, displayStrongDefinition};

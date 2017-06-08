@@ -47,7 +47,8 @@ class StrongRepo {
                 jsonItem.transliteration, 
                 '',
                 jsonItem.englishDescription,
-                jsonItem.occurrences.map((occurrence) => occurrence.references.map((refKey) => refKeyToReference(refKey)))
+                // jsonItem.occurrences.map((occurrence) => occurrence.references.map((refKey) => refKeyToReference(refKey)))
+                jsonItem.occurrences
             );
         });
     }
