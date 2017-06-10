@@ -6,7 +6,7 @@ import {LocationFragment} from './util/fragmentQuery';
 import {EventWorker} from './util/eventWorker';
 import {JSONLoader} from './util/jsonLoader';
 import {UserNotes} from './userNotes';
-import {BibleTextRenderer} from './bibleUtil/render';
+import {BibleTextRenderer} from './render';
 import {StrongRepo} from './domain/strongs'
 
 const crossReferenceRepo = new CrossReferenceRepo(JSONLoader);
