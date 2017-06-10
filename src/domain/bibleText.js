@@ -50,7 +50,7 @@ class BibleTextRepo {
 
         // TODO this format should be already in raw data
         return verses.map((verse) => {
-            return new Verse(reference.book, reference.from.chapter, verse.verse, verse.text, null, verse.strongs);
+            return new Verse(reference.book, reference.from.chapter, verse.verse, verse.text, [], verse.strongs);
         });
     }
 
