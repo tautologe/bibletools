@@ -10,52 +10,6 @@ class BibleModule {
     }
 }
 
-
-const Books = {
-    GEN: 1,
-    EX: 2,
-    LEV: 3,
-    NUM: 4,
-    DTN: 5,
-    JOS: 6,
-    IUD: 7,
-    RUT: 8,
-    SAM1: 9,
-    SAM2: 10,
-    KOE1: 11,
-    KOE2: 12,
-    CHR1: 13,
-    CHR2: 14,
-    ESR: 15,
-    NEH: 16,
-    EST: 17,
-    PS: 18,
-    SPR: 19,
-    HI: 20,
-    PRED: 21,
-    HLD: 22,
-    JES: 23,
-    JER: 24,
-    KLG: 25,
-    EZ: 26,
-    DAN: 27,
-    HOS: 28,
-    JO: 29,
-    AM: 30,
-    OB: 31,
-    JON: 32,
-    MI: 33,
-    NAH: 34,
-    HAB: 35,
-    ZEF: 36,
-    HAG: 37,
-    SAC: 38,
-    MAL: 39,
-    // ...
-    OFFB: 66,
-    // ..
-};
-
 BibleModule.LUT1912 = new BibleModule('LUT1912', 'Luther 1912', {
     'Gen': '1Mo',
     'Jos': 'Jos',

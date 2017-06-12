@@ -6,7 +6,9 @@ install:
   - npm install
 
 script:
+  - npm run eslint src/
   - npm test
+  - npm run webpack
 
 sudo: required
 

@@ -5,7 +5,8 @@
   "scripts": {
     "test": "mocha --recursive --compilers js:babel-register",
     "build": "echo '[ERROR] deprecated command, use npm run webpack instead'; exit 1; babel src --source-maps --out-file demo/bundle.js",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "eslint": "eslint"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",

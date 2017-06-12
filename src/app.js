@@ -1,3 +1,4 @@
+/* global window */
 import {ReferenceParser, _bookNames} from './domain/reference';
 import {BibleTextRepo} from './domain/bibleText';
 import {BibleModule} from './domain/bibleModule';

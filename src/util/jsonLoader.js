@@ -1,3 +1,4 @@
+/* global XMLHttpRequest */
 const linklistCache = {};
 const JSONLoader = {
     load: (file) => new Promise((resolve, reject) => {
