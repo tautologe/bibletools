@@ -2,10 +2,16 @@ language: node_js
 node_js:
   - "7"
 
+install:
+  - npm install
+
+script:
+  - npm test
+
 sudo: required
 
 services:
   - docker
 
-before_install:
+after_success:
   - cd provision/ && ./run-provision.sh
