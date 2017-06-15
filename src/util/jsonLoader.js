@@ -6,7 +6,7 @@ const JSONLoader = {
             return resolve(JSON.parse(linklistCache[file]));
         }
         let req = new XMLHttpRequest();
-        req.open('GET', file, true);
+        req.open('GET', 'repo/' + file, true);
         req.onload = () => {
             if (req.status == '200') {
                 linklistCache[file] = req.responseText;

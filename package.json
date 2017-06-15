@@ -6,7 +6,9 @@
     "test": "mocha --recursive --compilers js:babel-register",
     "build": "echo '[ERROR] deprecated command, use npm run webpack instead'; exit 1; babel src --source-maps --out-file demo/bundle.js",
     "webpack": "webpack",
-    "eslint": "eslint"
+    "start": "webpack-dev-server --progress --colors",
+    "eslint": "eslint",
+    "provision": "docker run --rm --volume=$(pwd)/:/shared -it tautologe/saxon bash -c \"/shared/provision/fetchBible.sh\""
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
@@ -17,5 +19,8 @@
     "eslint": "^3.16.1",
     "mocha": "3.2.0",
     "webpack": "^2.5.1"
+  },
+  "dependencies": {
+    "webpack-dev-server": "^2.4.5"
   }
 }

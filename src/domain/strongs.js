@@ -36,7 +36,7 @@ class StrongRepo {
     }
 
     _getJson (key) {
-        return this.JSONLoader.load(`strongs/${encodeURIComponent(key)}.json`);
+        return this.JSONLoader.load(`strong/${encodeURIComponent(key)}.json`);
     }
 
     getItem(key) {

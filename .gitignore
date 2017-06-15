@@ -2,6 +2,8 @@ node_modules/
 .vscode/
 dist/
 demo/bundle.js
+demo/bundle.js.map
 demo/bible
 demo/strongs
 output/
+demo/repo

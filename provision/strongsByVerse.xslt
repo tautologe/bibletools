@@ -4,6 +4,8 @@
   xmlns="http://www.w3.org/1999/xhtml">
   <xsl:output method="text" encoding="UTF-8" media-type="text/plain"/>
 
+  <xsl:param name="outputDirectory"/>
+
 <xsl:template match="BIBLEBOOK">
     <xsl:apply-templates />
 </xsl:template>
@@ -16,7 +18,7 @@
 </xsl:template>
 
 <xsl:template match="CHAPTER">
-    <xsl:result-document href="byVerse/{../@bnumber}/{@cnumber}.json" method="text">
+    <xsl:result-document href="${outputDirectory}/byVerse/{../@bnumber}/{@cnumber}.json" method="text">
     <xsl:text>{ "chapter": </xsl:text>
     <xsl:value-of select="@cnumber" />
     <xsl:text>, "verses": [</xsl:text>

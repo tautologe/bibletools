@@ -31,7 +31,7 @@ class CrossReferenceRepo {
     }
 
     getOutgoingReferences (fromReference) {
-        return this.jsonLoader.load('bible/linklist.json')
+        return this.jsonLoader.load('linklist.json')
         .then((linklist) => linklist[referenceToRefKey(fromReference)])
         .then((referenceKeys) => {
             return referenceKeys && referenceKeys.map((refKey) => refKeyToReference(refKey))

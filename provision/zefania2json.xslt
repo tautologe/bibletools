@@ -7,9 +7,11 @@
 <xsl:param name="externalStrongBibleFileName"/>
 <xsl:variable name="externalStrongBible" select="document($externalStrongBibleFileName)" />
 
+<xsl:param name="outputDirectory"/>
+
 <xsl:template match="BIBLEBOOK">
     <xsl:apply-templates />
-    <xsl:result-document href="output/bible/{@bsname}/meta.json" method="text">
+    <xsl:result-document href="{$outputDirectory}/bible/{@bsname}/meta.json" method="text">
     <xsl:text>{ "bname": "</xsl:text>
     <xsl:value-of select="@bname" />
     <xsl:text>", "bsname": "</xsl:text>
@@ -21,7 +23,7 @@
 </xsl:template>
 
 <xsl:template match="CHAPTER">
-    <xsl:result-document href="output/bible/{../@bsname}/{@cnumber}.json" method="text">
+    <xsl:result-document href="{$outputDirectory}/bible/{../@bsname}/{@cnumber}.json" method="text">
     <xsl:text>{ "chapter": </xsl:text>
     <xsl:value-of select="@cnumber" />
     <xsl:text>, "verses": [</xsl:text>

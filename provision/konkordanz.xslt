@@ -8,6 +8,8 @@
     <xsl:param name="externalStrongDictFileName"/>
     <xsl:variable name="strongDict" select="document($externalStrongDictFileName)" />
 
+    <xsl:param name="outputDirectory"/>
+
     <xsl:template match="dictionary">
         <xsl:apply-templates />
     </xsl:template>
@@ -15,7 +17,7 @@
     <xsl:template match="item">
         <xsl:variable name="strongDictItem" select="$strongDict/dictionary/item[@id=current()/@id]" />
 
-        <xsl:result-document href="output/strong/{@id}.json" method="text">
+        <xsl:result-document href="{$outputDirectory}/strong/{@id}.json" method="text">
             <xsl:text>{ "id": "</xsl:text><xsl:value-of select="@id" /><xsl:text>",&#xa;</xsl:text>
             <xsl:text>"title_konk": "</xsl:text><xsl:value-of select="./title" /><xsl:text>",&#xa;</xsl:text>
             <xsl:text>"title_strongs": "</xsl:text><xsl:value-of select="$strongDictItem/title" /><xsl:text>",&#xa;</xsl:text>

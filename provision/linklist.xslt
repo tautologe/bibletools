@@ -21,10 +21,10 @@
     <xsl:text>": [</xsl:text>
     <xsl:apply-templates />
     <xsl:text>]</xsl:text>
-    <xsl:if test="count(following-sibling::verse[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+    <xsl:if test="count(following-sibling::verse[.]) > 0"><xsl:text>,&#xa;</xsl:text></xsl:if>
   </xsl:template>
 
-  <xsl:template match="link">
+  <xsl:template match="verse/link">
     <xsl:text>"</xsl:text>
     <xsl:value-of select="@bn" />
     <xsl:text>;</xsl:text>
@@ -38,5 +38,7 @@
     <xsl:text>"</xsl:text>
     <xsl:if test="count(following-sibling::link[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
   </xsl:template>
+
+  <xsl:template match="text()" />
 
 </xsl:stylesheet>
