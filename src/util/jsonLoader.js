@@ -1,22 +1,25 @@
 /* global XMLHttpRequest */
-const linklistCache = {};
+const cache = {};
 const JSONLoader = {
-    load: (file) => new Promise((resolve, reject) => {
-        if (linklistCache[file]) {
-            return resolve(JSON.parse(linklistCache[file]));
+    load: (file) => {
+        if (cache[file]) {
+            return cache[file];
         }
-        let req = new XMLHttpRequest();
-        req.open('GET', 'repo/' + file, true);
-        req.onload = () => {
-            if (req.status == '200') {
-                linklistCache[file] = req.responseText;
-                resolve(JSON.parse(req.responseText));
-            } else {
-                reject(Error(req.statusText))
-            }
-        };
-        req.send();
-    })
+        const promise = new Promise((resolve, reject) => {
+            let req = new XMLHttpRequest();
+            req.open('GET', 'repo/' + file, true);
+            req.onload = () => {
+                if (req.status == '200') {
+                    resolve(JSON.parse(req.responseText));
+                } else {
+                    reject(Error(req.statusText))
+                }
+            };
+            req.send();
+        });
+        cache[file] = promise;
+        return promise;
+    }
 };
 
 export {
