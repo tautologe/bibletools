@@ -1,5 +1,9 @@
 {
-  "presets": ["babili"],
+  "presets": [["env", {
+    "targets": {
+      "browsers": ["last 2 versions", "iOS > 7"]
+    }
+  }], "babili"],
   "plugins": ["transform-es2015-modules-umd"],
   "sourceMaps": true
 }
