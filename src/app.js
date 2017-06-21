@@ -16,7 +16,7 @@ const strongRepo = new StrongRepo(JSONLoader);
 
 const getInputProcessor = (getUserInput, bibleTextRenderer) => {
     const getBibleTextForReference = ({raw, resolved}) => {
-        return bibleTextRepo.getFromReference(BibleModule.LUT1912, resolved)
+        return bibleTextRepo.getFromReference(BibleModule.ELB1905, resolved)
             .then((bibleText) => crossReferenceRepo.enrichBibleTextWithReferences(bibleText))
             .then((enrichedBibleText) => bibleTextRenderer.renderBibleReferences(raw, enrichedBibleText));
     };
@@ -49,7 +49,7 @@ const processUserInput = getInputProcessor(
 
 window.document.addEventListener('click', function (e) {
     if (e.target.classList.contains('strongReference')) {
-        const strongDefinitionView = e.target.closest('.verseinfo').getElementsByClassName('strongDefinition')[0];
+        const strongDefinitionView = e.target.closest('.referenceWithText').getElementsByClassName('strongDefinition')[0];
         strongRepo.getItem(e.target.dataset.strongkey).then((strongDefinition) => {
             return bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionView);
         });

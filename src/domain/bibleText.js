@@ -32,8 +32,8 @@ class BibleTextRepo {
     }
 
     // todo make methods private
-    _getPathArray (bookName, reference) {
-        return [bookName, reference.from.chapter];
+    _getPathArray (bibleModule, reference) {
+        return [bibleModule.moduleKey, bibleModule.mapBook(reference.book), reference.from.chapter];
     }
 
     _getChapter (path) {
@@ -61,7 +61,7 @@ class BibleTextRepo {
     
     getFromReference (bibleModule, references) {
         // TODO maybe we need more than one chapter
-        const path = this._getPathArray(bibleModule.mapBook(references[0].book), references[0]);
+        const path = this._getPathArray(bibleModule, references[0]);
         return this._getChapter(path).then((chapterJson) => this._getVersesFromChapter(references, chapterJson)).catch((err) => console.log(err));
     }
 }

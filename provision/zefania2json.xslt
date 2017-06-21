@@ -2,16 +2,18 @@
   version="2.0" 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
   xmlns="http://www.w3.org/1999/xhtml">
-  <xsl:output method="text" encoding="UTF-8" media-type="text/plain"/>
+<xsl:output method="text" encoding="UTF-8" media-type="text/plain"/>
+<xsl:strip-space elements="VERS"/>
 
 <xsl:param name="externalStrongBibleFileName"/>
 <xsl:variable name="externalStrongBible" select="document($externalStrongBibleFileName)" />
 
 <xsl:param name="outputDirectory"/>
+<xsl:variable name="bibleRoot"><xsl:value-of select="$outputDirectory" />/bible/<xsl:value-of select="/XMLBIBLE/INFORMATION/identifier" /></xsl:variable>
 
 <xsl:template match="BIBLEBOOK">
     <xsl:apply-templates />
-    <xsl:result-document href="{$outputDirectory}/bible/{@bsname}/meta.json" method="text">
+    <xsl:result-document href="{$bibleRoot}/{(@bsname | @bnumber)[1]}/meta.json" method="text">
     <xsl:text>{ "bname": "</xsl:text>
     <xsl:value-of select="@bname" />
     <xsl:text>", "bsname": "</xsl:text>
@@ -23,7 +25,7 @@
 </xsl:template>
 
 <xsl:template match="CHAPTER">
-    <xsl:result-document href="{$outputDirectory}/bible/{../@bsname}/{@cnumber}.json" method="text">
+    <xsl:result-document href="{$bibleRoot}/{../(@bsname | @bnumber)[1]}/{@cnumber}.json" method="text">
     <xsl:text>{ "chapter": </xsl:text>
     <xsl:value-of select="@cnumber" />
     <xsl:text>, "verses": [</xsl:text>
@@ -41,22 +43,30 @@
     <xsl:choose>
         <xsl:when test="$externalStrongBible">
             <xsl:apply-templates select="$externalStrongBible/XMLBIBLE/BIBLEBOOK[
-                @bnumber = current()/../../@bnumber]/CHAPTER[@cnumber = current()/../@cnumber]/VERS[@vnumber=current()/@vnumber]/gr"/>
+                @bnumber = current()/../../@bnumber]/CHAPTER[@cnumber = current()/../@cnumber]/VERS[@vnumber=current()/@vnumber]/gr" mode="list"/>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:apply-templates select="./gr"/>
+            <xsl:apply-templates select="./gr" mode="list"/>
         </xsl:otherwise>
     </xsl:choose>
     <xsl:text>]}</xsl:text>
     <xsl:if test="count(following-sibling::VERS[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
 </xsl:template>
 
-<xsl:template match="gr">
+<xsl:template match="gr" mode="list">
     <xsl:text>"</xsl:text>
     <xsl:apply-templates select="../../.." mode="language" />
     <xsl:value-of select="@str" />
     <xsl:text>"</xsl:text>
     <xsl:if test="count(following-sibling::gr[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
+</xsl:template>
+
+<xsl:template match="gr">
+    <xsl:apply-templates select="./text()" />
+    <xsl:text>[</xsl:text>
+    <xsl:apply-templates select="../../.." mode="language" />
+    <xsl:value-of select="@str" />
+    <xsl:text>]</xsl:text>
 </xsl:template>
 
 <xsl:template match="BIBLEBOOK" mode="language">

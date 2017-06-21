@@ -17,7 +17,7 @@ const BibleTextRenderer = function (_window, outputElement) {
             <p>${bibleText}</p></div>`;
         const strongReferencesToString = (strongReferences) => {
             if (!strongReferences || strongReferences.length == 0) {
-                return '';
+                return '<span class="strongDefinition"></span>';
             }
             return '<span class="strongReferences">[#] ' +
                 strongReferences.map((strongReference) => {
@@ -36,7 +36,7 @@ const BibleTextRenderer = function (_window, outputElement) {
         const verseRangeToString = (verses) => {
             const verseTemplate = (verse) => `
                 <small>${sanitizeHTML(verse.verse)}</small>
-                ${sanitizeHTML(verse.text)}
+                ${sanitizeHTML(verse.text).replace(/([GH][0-9]{1,4})/g, "<span class='strongReference' data-strongkey='$1'>$1</span>")}
                 <div class="verseinfo">
                     ${crossReferencesToString(verse.crossReferences)}
                     ${strongReferencesToString(verse.strongReferences)}
