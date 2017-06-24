@@ -25,12 +25,15 @@ const BibleTextRenderer = function (_window) {
                 }).join(' ') +
                 '</span><span class="strongDefinition"></span>';
         };
+        const referenceToLink = (reference) => {
+            return '#q=' + encodeURIComponent(reference.toString().replace(/\s/,''));
+        }
         const crossReferencesToString = (crossReferences) => {
             if (!crossReferences || !crossReferences.fromReference) {
                 return '';
             }
             return '<span class="crossReferences">[=&gt;] ' +
-                    crossReferences.toReferences.map((ref) => `${ref.toString()}`).join('; ') +
+                    crossReferences.toReferences.map((ref) => `<a href="${referenceToLink(ref)}">${ref.toString()}</a>`).join('; ') +
                     '</span><br />';
         };
         const verseRangeToString = (verses) => {
