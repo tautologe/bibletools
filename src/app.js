@@ -14,24 +14,35 @@ const crossReferenceRepo = new CrossReferenceRepo(JSONLoader);
 const bibleTextRepo = new BibleTextRepo(JSONLoader);
 const strongRepo = new StrongRepo(JSONLoader);
 
-const getInputProcessor = (getUserInput, bibleTextRenderer) => {
-    const getBibleTextForReference = ({raw, resolved}) => {
-        return bibleTextRepo.getFromReference(BibleModule.ELB1905, resolved)
-            .then((bibleText) => crossReferenceRepo.enrichBibleTextWithReferences(bibleText))
-            .then((enrichedBibleText) => bibleTextRenderer.renderBibleReferences(raw, enrichedBibleText));
+const getInputProcessor = (getUserInput, outputElement, bibleTextRenderer) => {
+    const loadAndDisplayBibleText = (references) => {
+        outputElement.innerHTML = "";
+        const promises = references.map(({raw, resolved}) => {
+            const textContainer = outputElement.ownerDocument.createElement("div");
+            outputElement.appendChild(textContainer);
+            return {raw, resolved, textContainer};
+        }).map(({raw, resolved, textContainer}) => {
+            const bibleTextPromise = bibleTextRepo.getFromReference(BibleModule.ELB1905, resolved)
+                .then((bibleText) => crossReferenceRepo.enrichBibleTextWithReferences(bibleText))
+                .then((enrichedBibleText) => bibleTextRenderer.renderBibleReferences(raw, enrichedBibleText));
+            return {bibleTextPromise, textContainer};
+        }).map(({bibleTextPromise, textContainer}) => {
+            return bibleTextPromise.then((renderedBibletext) => {
+                textContainer.innerHTML = renderedBibletext;
+            });
+        });
+        return Promise.all(promises);
     };
 
     const detectBibleReferencesInUserInput = () => {
         const bibelReferences = ReferenceParser.DEFAULT.detectAndResolveBibleReferences(getUserInput());
-        // TODO: get rid of this window reference
-        window.document.getElementById("detected-json").innerHTML = JSON.stringify(bibelReferences, null, 2);
-        return Promise.all(bibelReferences.map(getBibleTextForReference)).then(bibleTextRenderer.displayBibleVerses);
+        return loadAndDisplayBibleText(bibelReferences);
     };
     return detectBibleReferencesInUserInput;
 };
 
-const bookNamesElement = window.document.getElementById('booknames');
 const outputElement = window.document.getElementById('results');
+const bookNamesElement = window.document.getElementById('booknames');
 const userInputElement = window.document.getElementById('user-input');
 const eventWorker = EventWorker(window);
 const userNotes = UserNotes(window.localStorage, userInputElement);
@@ -42,9 +53,10 @@ if (locationFragment.hasParameter('q')) {
 } else {
     userNotes.restore();
 }
-const bibleTextRenderer = BibleTextRenderer(window, outputElement);
+const bibleTextRenderer = BibleTextRenderer(window);
 const processUserInput = getInputProcessor(
     userNotes.get,
+    outputElement,
     bibleTextRenderer);
 
 window.document.addEventListener('click', function (e) {

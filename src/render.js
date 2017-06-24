@@ -1,4 +1,4 @@
-const BibleTextRenderer = function (_window, outputElement) {
+const BibleTextRenderer = function (_window) {
     const sanitizeHTML = (unsafeString) => {
         var d = _window.document.createElement('div');
         d.appendChild(_window.document.createTextNode(unsafeString));
@@ -46,7 +46,6 @@ const BibleTextRenderer = function (_window, outputElement) {
     
         return referenceTemplate(rawReference, verseRangeToString(bibleText.verses));
     };
-    const displayBibleVerses = (flattenedVerses) => outputElement.innerHTML = flattenedVerses.join('');
 
     const displayStrongDefinition = (strongDefinition, strongView) => {
         strongView.innerHTML = `<h1>${sanitizeHTML(strongDefinition.key)}: ${sanitizeHTML(strongDefinition.title)}
@@ -57,7 +56,7 @@ const BibleTextRenderer = function (_window, outputElement) {
         `;
     };
     
-    return {renderBibleReferences, displayBibleVerses, displayStrongDefinition};
+    return {renderBibleReferences, displayStrongDefinition};
 };
 
 export {

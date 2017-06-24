@@ -15,7 +15,13 @@ const EventWorker = function (_window) {
         if (next && !pending) {
             pending = true;
             timer = Date.now();
-            next().then(() => {
+            const promise = next();
+            if (typeof promise === 'undefined') {
+                _window.console.error('job does not return a promise');
+                reset();
+                return;
+            }
+            promise.then(() => {
                 reset();
             }).catch((err) => {
                 _window.console.error('catched error', err);
