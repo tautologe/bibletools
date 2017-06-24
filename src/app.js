@@ -19,6 +19,7 @@ const getInputProcessor = (getUserInput, outputElement, bibleTextRenderer) => {
         outputElement.innerHTML = "";
         const promises = references.map(({raw, resolved}) => {
             const textContainer = outputElement.ownerDocument.createElement("div");
+            textContainer.setAttribute('class', 'referenceWithText');
             outputElement.appendChild(textContainer);
             return {raw, resolved, textContainer};
         }).map(({raw, resolved, textContainer}) => {
@@ -61,7 +62,7 @@ const processUserInput = getInputProcessor(
 
 window.document.addEventListener('click', function (e) {
     if (e.target.classList.contains('strongReference')) {
-        const strongDefinitionView = e.target.closest('.referenceWithText').getElementsByClassName('strongDefinition')[0];
+        const strongDefinitionView = e.target.closest('.bibleVerse').getElementsByClassName('strongDefinition')[0];
         strongRepo.getItem(e.target.dataset.strongkey).then((strongDefinition) => {
             return bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionView);
         });

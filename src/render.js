@@ -9,12 +9,11 @@ const BibleTextRenderer = function (_window) {
         const uriEscapeReference = (reference) => encodeURIComponent(reference.replace(/\s/g, ''));
         const generateBibleServerLink = (reference) => `https://bibleserver.com/text/LUT/${uriEscapeReference(reference)}`;
         
-        const referenceTemplate = (reference, bibleText) => `<div class="referenceWithText">
-            <p>${sanitizeHTML(reference)}:
+        const referenceTemplate = (reference, bibleText) => `<p>${sanitizeHTML(reference)}:
             <small><a href="${generateBibleServerLink(reference)}" target="_blank">
                 Öffne auf bibleserver.com
             </a></small></p>
-            <p>${bibleText}</p></div>`;
+            <p>${bibleText}</p>`;
         const strongReferencesToString = (strongReferences) => {
             if (!strongReferences || strongReferences.length == 0) {
                 return '<span class="strongDefinition"></span>';
@@ -34,13 +33,14 @@ const BibleTextRenderer = function (_window) {
                     '</span><br />';
         };
         const verseRangeToString = (verses) => {
-            const verseTemplate = (verse) => `
+            const verseTemplate = (verse) => `<div class="bibleVerse">
                 <small>${sanitizeHTML(verse.verse)}</small>
-                ${sanitizeHTML(verse.text).replace(/([GH][0-9]{1,4})/g, "<span class='strongReference' data-strongkey='$1'>$1</span>")}
+                ${sanitizeHTML(verse.text).replace(/\[([GH][0-9]{1,4})\]/g, "<span class='strongReference' data-strongkey='$1'>[$1]</span>")}
                 <div class="verseinfo">
                     ${crossReferencesToString(verse.crossReferences)}
                     ${strongReferencesToString(verse.strongReferences)}
-                </div>`;
+                </div>
+            </div>`;
             return verses.map((verse) => verseTemplate(verse)).join(' ');
         };
     
