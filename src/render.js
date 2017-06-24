@@ -4,6 +4,7 @@ const BibleTextRenderer = function (_window) {
         d.appendChild(_window.document.createTextNode(unsafeString));
         return d.innerHTML;
     };
+    const createStrongLinks = (text) => text.replace(/([GH][0-9]{1,4})/g, "<span class='strongReference' data-strongkey='$1'>$1</span>");
 
     const renderBibleReferences = (rawReference, bibleText) => {
         const uriEscapeReference = (reference) => encodeURIComponent(reference.replace(/\s/g, ''));
@@ -35,7 +36,7 @@ const BibleTextRenderer = function (_window) {
         const verseRangeToString = (verses) => {
             const verseTemplate = (verse) => `<div class="bibleVerse">
                 <small>${sanitizeHTML(verse.verse)}</small>
-                ${sanitizeHTML(verse.text).replace(/\[([GH][0-9]{1,4})\]/g, "<span class='strongReference' data-strongkey='$1'>[$1]</span>")}
+                ${createStrongLinks(sanitizeHTML(verse.text))}
                 <div class="verseinfo">
                     ${crossReferencesToString(verse.crossReferences)}
                     ${strongReferencesToString(verse.strongReferences)}
@@ -50,7 +51,7 @@ const BibleTextRenderer = function (_window) {
     const displayStrongDefinition = (strongDefinition, strongView) => {
         strongView.innerHTML = `<h1>${sanitizeHTML(strongDefinition.key)}: ${sanitizeHTML(strongDefinition.title)}
         (${sanitizeHTML(strongDefinition.transliteration)})</h1>
-        ${sanitizeHTML(strongDefinition.description)}
+        ${createStrongLinks(sanitizeHTML(strongDefinition.description))}
         <h2>In der Bibel übersetzt mit</h2>
         ${sanitizeHTML(strongDefinition.occurrences.map((occurrence) => occurrence.title.replace(/\([^)]*\)/, '').trim()).join(', '))}
         `;
