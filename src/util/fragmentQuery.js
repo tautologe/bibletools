@@ -11,7 +11,13 @@ const _parseFragmentString = (fragmentString) => {
         }
         return result;
     }, {});
-}
+};
+
+const _createFragmentString = (query) => {
+    return '#' + Object.keys(query).map((key) => {
+        return `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`
+    }).join('&');
+};
 
 class LocationFragment {
     constructor (_window) {
@@ -23,8 +29,16 @@ class LocationFragment {
     hasParameter (key) {
         return this.getParameter(key) && this.getParameter(key).length > 1;
     }
-    getQuery() {
-        return _parseFragmentString(this._window.document.location.hash)
+    setParameter (key, value) {
+        const query = this.getQuery();
+        query[key] = value;
+        this.setQuery(query);
+    }
+    getQuery () {
+        return _parseFragmentString(this._window.document.location.hash);
+    }
+    setQuery (query) {
+        this._window.document.location.hash = _createFragmentString(query);
     }
     addChangeListener (callback) {
         this._window.addEventListener("hashchange", () => {

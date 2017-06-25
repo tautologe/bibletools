@@ -67,6 +67,16 @@ window.document.addEventListener('click', function (e) {
             return bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionView);
         });
     }
+    if (e.target.classList.contains('bibleReference')) {
+        const reference = e.target.dataset.reference
+        if (e.target.classList.contains('addToList')) {
+            const q = userInputElement.innerText;
+            userInputElement.innerText = `${q};${reference}`;
+        } else {
+            userInputElement.innerText = reference;
+        }
+        scheduleProcessing();
+    }
 }, false);
 
 processUserInput();
