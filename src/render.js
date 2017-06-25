@@ -56,7 +56,15 @@ const BibleTextRenderer = function (_window) {
         (${sanitizeHTML(strongDefinition.transliteration)})</h1>
         ${createStrongLinks(sanitizeHTML(strongDefinition.description))}
         <h2>In der Bibel übersetzt mit</h2>
-        ${sanitizeHTML(strongDefinition.occurrences.map((occurrence) => occurrence.title.replace(/\([^)]*\)/, '').trim()).join(', '))}
+        ${strongDefinition.occurrences.map((occurrence) => {
+            const title = sanitizeHTML(occurrence.title.replace(/\([^)]*\)/, '').trim());
+            // TODO copied from above, remove duplication
+            const references = occurrence.references.map((ref) => `
+                        <span class="bibleReference" data-reference="${sanitizeHTML(ref.toString())}">${sanitizeHTML(ref.toString())}</span>
+                        <span class="bibleReference addToList" data-reference="${sanitizeHTML(ref.toString())}" title="Hinzufügen">[+]</span>
+                        `).join('; ')
+            return title + ' (' + references + ')';
+        }).join(', ')}
         `;
     };
     
