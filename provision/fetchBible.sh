@@ -34,4 +34,9 @@ saxonb-xslt -xsl:provision/konkordanz.xslt -s:/elb1905-konkordanz.xml -ext:on ex
 # Transform linklist
 saxonb-xslt -xsl:provision/linklist.xslt -s:/linklist.xml -o:/shared/demo/repo/linklist.json -ext:on
 
+saxonb-xslt -xsl:provision/moduleStructure.xslt -s:/lut1912.xml > /shared/demo/repo/bible/LUTH1912AP/structure.json
+saxonb-xslt -xsl:provision/moduleStructure.xslt -s:/elb1905.xml > /shared/demo/repo/bible/ELB1905STR/structure.json
+
+saxonb-xslt -xsl:provision/strong_stats.xslt -s:/elb1905.xml > /shared/demo/repo/bible/strong_stats.json
+
 chmod -R a+w /shared/demo/repo
