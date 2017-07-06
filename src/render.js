@@ -37,7 +37,7 @@ const BibleTextRenderer = function (_window) {
                     '</span><br />';
         };
         const verseRangeToString = (verses) => {
-            const verseTemplate = (verse) => `<div class="bibleVerse">
+            const verseTemplate = (verse) => `<div class="bibleVerse strongContainer">
                 <small>${sanitizeHTML(verse.verse)}</small>
                 ${createStrongLinks(sanitizeHTML(verse.text))}
                 <div class="verseinfo">
@@ -55,6 +55,7 @@ const BibleTextRenderer = function (_window) {
         strongView.innerHTML = `<h1>${sanitizeHTML(strongDefinition.key)}: ${sanitizeHTML(strongDefinition.title)}
         (${sanitizeHTML(strongDefinition.transliteration)})</h1>
         ${createStrongLinks(sanitizeHTML(strongDefinition.description))}
+        <div class="strongOccurrences">
         <h2>In der Bibel übersetzt mit</h2>
         ${strongDefinition.occurrences.map((occurrence) => {
             const title = sanitizeHTML(occurrence.title.replace(/\([^)]*\)/, '').trim());
@@ -65,6 +66,7 @@ const BibleTextRenderer = function (_window) {
                         `).join('; ')
             return title + ' (' + references + ')';
         }).join(', ')}
+        </div>
         `;
     };
     

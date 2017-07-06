@@ -1,5 +1,5 @@
 /* global window */
-import {ReferenceParser, _bookNames} from './domain/reference';
+import {ReferenceParser} from './domain/reference';
 import {BibleTextRepo} from './domain/bibleText';
 import {BibleModule} from './domain/bibleModule';
 import {CrossReferenceRepo} from './domain/crossReference';
@@ -8,7 +8,8 @@ import {EventWorker} from './util/eventWorker';
 import {JSONLoader} from './util/jsonLoader';
 import {UserNotes} from './userNotes';
 import {BibleTextRenderer} from './render';
-import {StrongRepo} from './domain/strongs'
+import {StrongRepo} from './domain/strongs';
+import {strongStatsTemplate} from './domain/strongStats';
 
 const crossReferenceRepo = new CrossReferenceRepo(JSONLoader);
 const bibleTextRepo = new BibleTextRepo(JSONLoader);
@@ -43,7 +44,6 @@ const getInputProcessor = (getUserInput, outputElement, bibleTextRenderer) => {
 };
 
 const outputElement = window.document.getElementById('results');
-const bookNamesElement = window.document.getElementById('booknames');
 const userInputElement = window.document.getElementById('user-input');
 const eventWorker = EventWorker(window);
 const userNotes = UserNotes(window.localStorage, userInputElement);
@@ -62,7 +62,7 @@ const processUserInput = getInputProcessor(
 
 window.document.addEventListener('click', function (e) {
     if (e.target.classList.contains('strongReference')) {
-        const strongDefinitionView = e.target.closest('.bibleVerse').getElementsByClassName('strongDefinition')[0];
+        const strongDefinitionView = e.target.closest('.strongContainer').getElementsByClassName('strongDefinition')[0];
         strongRepo.getItem(e.target.dataset.strongkey).then((strongDefinition) => {
             return bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionView);
         });
@@ -94,7 +94,14 @@ locationFragment.addChangeListener((query) => {
     }
     scheduleProcessing();
 });
-bookNamesElement.innerHTML = _bookNames.join(',');
+
+JSONLoader.load(`bible/strong_stats.json`).then((json) => {
+    strongStatsTemplate(json, strongRepo).then((strongHtml) => {
+        window.document.getElementById('booknames').innerHTML = strongHtml.join('');
+    });
+    
+})
+
 
 export {
     getInputProcessor

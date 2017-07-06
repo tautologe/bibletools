@@ -18,10 +18,12 @@
       <strongs>
       <xsl:for-each-group select="./CHAPTER/VERS/gr" group-by="@str">
       <xsl:sort select="count(current-group())" order="descending"></xsl:sort>
-        <strong xyz="abc">
+      <xsl:if test="count(current-group()) > 1">
+        <strong count="{count(current-group())}">
         <xsl:text>{"</xsl:text><xsl:apply-templates select="../../.." mode="language" /><xsl:value-of select="current-grouping-key()"/><xsl:text>": "</xsl:text>
         <xsl:value-of select="count(current-group())"/><xsl:text>"}</xsl:text>
         </strong>
+      </xsl:if>
       </xsl:for-each-group>
       </strongs>
     </xsl:variable>
@@ -34,7 +36,7 @@
         <xsl:for-each select="$strongGroup">
             <xsl:for-each select="./child::*">
                 <xsl:value-of select="." />
-                <xsl:if test="count(following-sibling::*) > 0"><xsl:text>,&#xa;</xsl:text></xsl:if>    
+                <xsl:if test="count(following-sibling::*) > 0"><xsl:text>,&#xa;</xsl:text></xsl:if>
             </xsl:for-each>
         </xsl:for-each>
     <xsl:text>]</xsl:text>
