@@ -1,0 +1,42 @@
+main { max-width: 1600px; margin: auto; font-family: "Ubuntu Mono", monospace;}
+h1 { text-align: center; }
+.half-container { display: flex; flex-wrap: wrap; }
+.half-box {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: top;
+    margin: 20px;
+    max-width: 90%;
+}
+.half-box > div { padding: 20px; }
+.verseinfo { 
+    padding:10px;
+    background-color: lightgoldenrodyellow;
+    font-size: 90%;
+    clear: both; }
+.bibleReference {
+    cursor: pointer;
+    color: #888;
+}
+.strongReference {
+    cursor: pointer;
+    font-size: 90%;
+    color: #888;
+}
+.bibleReference:hover, .strongReference:hover {
+    text-decoration: underline;
+}
+.strongDefinition {
+    display: block;
+}
+.strongDefinition h1 {
+    font-size: 120%;
+}
+.strongDefinition h2 {
+    font-size: 110%;
+}
+#user-input { border: 1px dashed green;word-wrap: break-word; }
+#results { border: 1px dashed red; }
+#results:empty:not(:focus):before{content:attr(data-defaulttext)}
+/*#books .strongDefinition .strongOccurrences { display: none; }*/
+#detected-json { height: 100px; overflow: auto; display: none; }
+.referenceWithText { clear: right; }

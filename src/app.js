@@ -43,22 +43,66 @@ const getInputProcessor = (getUserInput, outputElement, bibleTextRenderer) => {
     return detectBibleReferencesInUserInput;
 };
 
-const outputElement = window.document.getElementById('results');
-const userInputElement = window.document.getElementById('user-input');
-const eventWorker = EventWorker(window);
-const userNotes = UserNotes(window.localStorage, userInputElement);
-
-const locationFragment = new LocationFragment(window);
-if (locationFragment.hasParameter('q')) {
-    userInputElement.innerText = locationFragment.getParameter('q');
-} else {
-    userNotes.restore();
-}
 const bibleTextRenderer = BibleTextRenderer(window);
-const processUserInput = getInputProcessor(
-    userNotes.get,
-    outputElement,
-    bibleTextRenderer);
+
+const outputElement = window.document.getElementById('results');
+const userInputElement = window.document.getElementById('user-input')
+
+if (userInputElement && outputElement) {
+    const eventWorker = EventWorker(window);
+    const userNotes = UserNotes(window.localStorage, userInputElement);
+
+    const locationFragment = new LocationFragment(window);
+    if (locationFragment.hasParameter('q')) {
+        userInputElement.innerText = locationFragment.getParameter('q');
+    } else {
+        userNotes.restore();
+    }
+    const processUserInput = getInputProcessor(
+        userNotes.get,
+        outputElement,
+        bibleTextRenderer);
+
+    processUserInput();
+    const scheduleProcessing = () => eventWorker.add(() => {
+        userNotes.save();
+        return processUserInput();
+    });
+    userInputElement.addEventListener("input", scheduleProcessing);
+
+    locationFragment.addChangeListener((query) => {
+        if (query['q']) {
+            userInputElement.innerText = query['q'];
+        } else {
+            userNotes.restore();
+        }
+        scheduleProcessing();
+    });
+
+    window.document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('bibleReference')) {
+            const reference = e.target.dataset.reference
+            if (e.target.classList.contains('addToList')) {
+                const q = userInputElement.innerText;
+                userInputElement.innerText = `${q};${reference}`;
+            } else {
+                userInputElement.innerText = reference;
+            }
+            scheduleProcessing();
+        }
+    }, false);
+}
+
+const readBookStrongStats = () => {
+    JSONLoader.load(`bible/strong_stats.json`).then((json) => {
+        strongStatsTemplate(json, strongRepo).then((strongHtml) => {
+            window.document.getElementById('booknames').innerHTML = strongHtml.join('');
+        });
+    });
+};
+
+if (window.readStrongStats) readBookStrongStats();
+
 
 window.document.addEventListener('click', function (e) {
     if (e.target.classList.contains('strongReference')) {
@@ -67,41 +111,7 @@ window.document.addEventListener('click', function (e) {
             return bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionView);
         });
     }
-    if (e.target.classList.contains('bibleReference')) {
-        const reference = e.target.dataset.reference
-        if (e.target.classList.contains('addToList')) {
-            const q = userInputElement.innerText;
-            userInputElement.innerText = `${q};${reference}`;
-        } else {
-            userInputElement.innerText = reference;
-        }
-        scheduleProcessing();
-    }
 }, false);
-
-processUserInput();
-const scheduleProcessing = () => eventWorker.add(() => {
-    userNotes.save();
-    return processUserInput();
-});
-userInputElement.addEventListener("input", scheduleProcessing);
-
-locationFragment.addChangeListener((query) => {
-    if (query['q']) {
-        userInputElement.innerText = query['q'];
-    } else {
-        userNotes.restore();
-    }
-    scheduleProcessing();
-});
-
-JSONLoader.load(`bible/strong_stats.json`).then((json) => {
-    strongStatsTemplate(json, strongRepo).then((strongHtml) => {
-        window.document.getElementById('booknames').innerHTML = strongHtml.join('');
-    });
-    
-})
-
 
 export {
     getInputProcessor

@@ -3,50 +3,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Bibelwiese</title>
-    <style>
-        main { max-width: 1600px; margin: auto; font-family: "Ubuntu Mono", monospace;}
-        h1 { text-align: center; }
-        .half-container { display: flex; flex-wrap: wrap; }
-        .half-box {
-            flex: 1; display: flex; flex-direction: column;
-            justify-content: top;
-            margin: 20px;
-            max-width: 90%;
-        }
-        .half-box > div { padding: 20px; }
-        .verseinfo { 
-            padding:10px;
-            background-color: lightgoldenrodyellow;
-            font-size: 90%;
-            clear: both; }
-        .bibleReference {
-            cursor: pointer;
-            color: #888;
-        }
-        .strongReference {
-            cursor: pointer;
-            font-size: 90%;
-            color: #888;
-        }
-        .bibleReference:hover, .strongReference:hover {
-            text-decoration: underline;
-        }
-        .strongDefinition {
-            display: block;
-        }
-        .strongDefinition h1 {
-            font-size: 120%;
-        }
-        .strongDefinition h2 {
-            font-size: 110%;
-        }
-        #user-input { border: 1px dashed green;word-wrap: break-word; }
-        #results { border: 1px dashed red; }
-        #results:empty:not(:focus):before{content:attr(data-defaulttext)}
-        #booknames .strongDefinition .strongOccurrences { display: none; }
-        #detected-json { height: 100px; overflow: auto; display: none; }
-        .referenceWithText { clear: right; }
-    </style>
+    <link href="style.css" rel="stylesheet" />
 <body>
     <main>
         <h1>Bibelwiese</h1>
@@ -79,6 +36,7 @@
                 <li>Verse können mit der URL vorausgewählt werden, z.B. <a href="#q=Joh3,16">#q=Joh3,16</a></li>
                 <li>Anzeige von Parallelstellen</li>
                 <li>Anzeige von Strong-Wörterbuch-Referenzen</li>
+                <li><a href="books.html">Buchstatistiken</a></li>
             </ul>
             <h3>Beispiele:</h3>
             <ul>
@@ -95,8 +53,6 @@
                 <li>Bei Büchern mit nur einem Kapitel muss die Kapitelnummer 1 mit angegeben werden. Obd 10 für Obd 1,10 wird nicht erkannt.</li>
                 <li>Wenn man dem Link folgt: bibleserver.com erkennt beim Markieren nicht alle Varianten der Versangabe</li>
             </ul>
-            <h3>Bekannte Buchnamen:</h3>
-            <p id="booknames"></p>
         </div>
     </main>
     <script src="bundle.js"></script>
