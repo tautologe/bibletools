@@ -1,19 +1,21 @@
 language: node_js
 node_js:
-  - "7"
-
+- '7'
 install:
-  - npm install
-
+- npm install
 script:
-  - npm run eslint src/
-  - npm test
-  - npm run webpack
-
+- npm run eslint src/
+- npm test
+- npm run webpack
 sudo: required
-
 services:
-  - docker
-
+- docker
 after_success:
-  - npm run provision
+- npm run provision
+deploy:
+  provider: heroku
+  api_key:
+    secure: a2CYRG0/mUd05S/mAfwes6nie2N2vEc0kxr8rsVeS4K9cRf7vQMTQR/Ef0rH0OgfECbBXA2fWC88Z20q4luJvFQEefMHbInpK3ehamAKED/tkUEwq8vnez2UHSYdzqZy4XKKycHybsCY843XolJ+CuhPVzdQyTWWGA6vqzvFlw3wy9u9X940OG+kL7GvfVvQ8jDaSR0YlFFG+y0nXSUjEq1NVm+fEjVNU1/IU9PmeugdyUP8wMmwMwd48OkI9y0oHSBqJkL8iPmmJEc2PsRhHOab5WfGsHkhKUXEuKgqvhMuSBX1NYN+BCScLOORwHmquX8JOUuK8CGnNjXnwc9WE3DFIxhVsRUHkvm5gErU+rZPzfSMtLOrb0AhttyeL9CHa8EhKMSCoLGQNBJULAqg5kwNVmfM9nKcjYebXAMjuMHlhCn+196ioooARPKgheJZrjvweUiS+W6h8vbmtehmUj8W2WtD3s+QB1qsAE8U7pTr/i/LAJBQ0u94ojazNcbXinTaZLa2uKK8JD2a7KqUNFAzNJ4eT3NfQyfEwA4XRyDbXzABnJjY7QQscHMItLMdF4oRJKHK3aN03tA5/szfSqvYNjlz1MTiJAT8rAokXtRBofQpurcGOVac+5v/5oQvZ/jnDXtJZ8w/1U6D3lDBvpdHqvFbC5aAxSwcHqKlyGk=
+  app: bibletools
+  on:
+    repo: tautologe/bibletools
