@@ -12,6 +12,8 @@ services:
 - docker
 after_success:
 - npm run provision
+
+before_deploy: "npm install"
 deploy:
   provider: heroku
   api_key:
