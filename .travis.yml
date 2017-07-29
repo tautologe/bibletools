@@ -13,8 +13,12 @@ script:
 - npm test
 - npm run webpack
 sudo: required
+addons:
+  apt:
+    packages:
+    - lftp
 services:
 - docker
 after_success:
 - npm run provision
-- curl --ftp-create-dirs -T /demo -u $FTP_USER:$FTP_PASSWORD $FTP_URL
+- lftp -u $FTP_USER,$FTP_PASSWORD $FTP_URL -e 'mirror -c -e -R demo /' 
