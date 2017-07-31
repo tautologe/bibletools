@@ -3,22 +3,23 @@ env:
   - secure: ak2yyhlDVfMu1SQbvW39nqZ68XWRaGhcRzXX399ndhBanqy2zxohmdXKz2yEMI0tGcDCWVKbzrYfH4Ki/V07D1VG0hQXjSrjJC7dHCMc9/Q6bfxDTYV0I1YzqGB3MHDSwEVINwyLun8bqp7BuZ+MoBB08CNbfKjccZx8MSNNcCxttPGHtODrnWAvnwhi/PKGJV/KxaUBLLtMcxJbuAMgnpJ5aL4L2xNq9MgMC0I26Gz0KuBGzU5Xstay010KUdxIl5fCoCsCZRQBuetA81GpgBv6HOCI3QCBNVgGb+y+3CEJxB1x7+H4I63ZrRaQDMp5Cm81hf3pgnHMURCy5lkXb1oyqo/BPvZLOIZ/rLHnibvehDctAw0JZGa4dd97YiLPquh4LKvrzrCwRIQiJ077TA67zShYYEzqhEu/8fi5RnImO5A0LsLAImBO/D32GELDTQneysmiJ5SkyMnH3Ehy9eK6cr8p1t/zdfBb3lOpGKZnSHZoiSzX2wysWGj61cDD56D+hJf50uXF4rvny8X5HfmO9wwJYBnjOeorBTeTcfbKUNMsD1cXGjsY3jQl5wWzmpr+3nFRiOmovB/UuZ91Qpv9Ewns7EDA2qA5kiyVzp5phfzd53UKfK6jaAewBK0H88NL5SpH89E2DUSynVYqsJljO7N+qSOwWC7SXxY/LLY=
   - secure: EL+6vK6bEEayGxyun8KiekT4Y16qb+WP8ROVHyfQ+RKdza5wftGba31as3oMCJBnhBaawkhiXlqLBngexRkkaShEZ65CAZhsx/pTMFWomLskYwPl+ZCD5eSjTUGRbrnT8GcT3UkGnJNCpY+2jHCXF3evGWv/9PXEqxxXyqTQdkkry8HnVwacUq06UNZE0XWluifFKWHLUpU26a7rRE9zLyP+/8ZCajtOywp4ja8ojXbeprz2rR7ct31TMXQYjyyEsyD/eMEUTa9W7NH7h097SkmXeXKkkhe9xXmdG3Vv1+M8HYrPAgzHzfheqeitjlPoUfrmE2vgGH3kBq7Tq1sDnMZWIHQYMqdHhAfVs/AY+/7jcI4mBLeg4O4avfQWHU9EMjVZ3xSmR9fiPcLRsoY3eJoKYdinzl/10Q8Ecj2v8MVJWdsCaTbXL7Y1FsLWBc6D5q/1n1pmqozjhGWZGPe3Sn9do9fRl0SEDUKC/qPhDaEULhCgnTQlbxbwz/IjR7btaMMg7E6ZuKecb16tpBnvAb0jRzR4PEik3YPjTFdSLdlQbIFK5bNAYq0wfV5cV3ZlHLtRR1PeO6DGmfxrJrs54nTggSGiC7LvqWs+Ucil9MI0LfPzDrq68ZY5eE9tMPV3Nb8Txh9U7dybfgQnnWQvDQ0JAbIiJm5ZDwZ2QRKHfMo=
   - secure: NT/lMWjPR8k817NRkrfleSK/mw00GH837CXmEb8geGbfpJE2So1OSTgxoaMfCBNEaBjtQHsIrmPQPPga4ZFi8La71bkMvbkkrH8SWla28p0ExzVnrDEc0vhRcsppqgnva5xZ9jn1/WRvoxuVCMRsALA27bPrRDIm5O6Pszod5ZsRm4hHxP+pgLZzFunFNr2SpXAdvxjU6hJT9qMAYBrWDBxytTMCfH6EWgIay21JCXP9bYNSESXD0Is4Z4Nu2srksR5dBbThH3h78qlnH31oQk8Zv3k8FqZ+YE7qP7uxTS6mAbOAPWu7Gtq+xaWSqkji5tRUQ/7yX2PuC6S4Fujqm4BSDZUU1SSqZFU94a5TZlS9/lkNkbHNomAC4cnQjM8vz2hSF8TffF8EGga3vCJP+PVOv85I35EqrJDjQtuRytTTrtJjusVXqJa22t1SmQQKdotKdNIiY03HC8mc6SaLi6gQYETmReq6+mEOr0GXsqG+nGrpO1KCX0a7RMoZ/ucHaDmBxo1fCjwhuMsBQVlbdMNMd3lu4Lv/Npn3MPzTDFLLacy7t6Ada9A4ndgtxrJajqrwhjE6bfgwJ197saR1iJAMYKU1MGa2AlaQ1mNXNiVmd0uqZ2m0sJHaT7Pk39Y889zubCOY2FLXRbSpOYO2IBspFpDI0hFT39Oep9183QI=
-language: node_js
-node_js:
-- '7'
-install:
-- npm install
-script:
-- npm run eslint src/
-- npm test
-- npm run webpack
-sudo: required
+#language: node_js
+#node_js:
+#- '7'
+#install:
+#- npm install
 addons:
   apt:
     packages:
     - lftp
-services:
-- docker
-after_success:
-- npm run provision
+script:
 - lftp -e "mirror -R demo /; quit" -u $FTP_USER,$FTP_PASSWORD $FTP_URL 
+#- npm run eslint src/
+#- npm test
+#- npm run webpack
+#sudo: required
+#services:
+#- docker
+#after_success:
+#- npm run provision
+#- lftp -e "mirror -R demo /; quit" -u $FTP_USER,$FTP_PASSWORD $FTP_URL 
