@@ -12,16 +12,20 @@ install:
 addons:
   apt:
     packages:
+    - openjdk-8-jre
     - lftp
+    - libsaxonhe-java
+    - libsaxonb-java
 script:
-- npm run eslint src/
-- npm test
-- npm run webpack
-- npm run provision
+- provision/fetchBible.sh
+#- npm run eslint src/
+#- npm test
+#- npm run webpack
+#- npm run provision
 - lftp -e "mirror -R demo /; quit" -u $FTP_USER,$FTP_PASSWORD $FTP_URL
 sudo: false
-services:
-- docker
+#services:
+#- docker
 #after_success:
 #- npm run provision
 #- lftp -e "mirror -R demo /; quit" -u $FTP_USER,$FTP_PASSWORD $FTP_URL 
