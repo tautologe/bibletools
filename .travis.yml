@@ -18,10 +18,10 @@ addons:
     - libsaxonb-java
 script:
 - provision/fetchBible.sh
-#- npm run eslint src/
-#- npm test
-#- npm run webpack
-#- npm run provision
+- npm run eslint src/
+- npm test
+- npm run webpack
+- npm run provision
 - lftp -e "mirror -R demo /; quit" -u $FTP_USER,$FTP_PASSWORD $FTP_URL
 sudo: false
 #services:
