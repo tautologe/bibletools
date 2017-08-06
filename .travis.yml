@@ -12,9 +12,9 @@ install:
 addons:
   apt:
     packages:
-    - openjdk-8-jre
+    - openjdk-7-jre
     - lftp
-    - libsaxonhe-java
+    - libsaxon-java
     - libsaxonb-java
 script:
 - provision/fetchBible.sh
