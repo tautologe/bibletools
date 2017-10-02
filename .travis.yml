@@ -9,20 +9,20 @@ node_js:
 - '7'
 install:
 - npm install
-addons:
-  apt:
-    packages:
-    - openjdk-7-jre
-    - lftp
-    - libsaxon-java
-    - libsaxonb-java
+#addons:
+#  apt:
+#    packages:
+#    - openjdk-7-jre
+#    - lftp
+#    - libsaxon-java
+#    - libsaxonb-java
 script:
-- provision/fetchBible.sh
-- ls -la *
+#- provision/fetchBible.sh
+#- ls -la *
 - npm run eslint src/
 - npm test
 - npm run webpack
-- ls -la demo/
+#- ls -la demo/*
 #- npm run provision
 - lftp -e "mirror -R demo /; quit" -u $FTP_USER,$FTP_PASSWORD $FTP_URL
 sudo: false
