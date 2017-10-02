@@ -9,11 +9,11 @@ node_js:
 - '7'
 install:
 - npm install
-#addons:
-#  apt:
-#    packages:
+addons:
+  apt:
+    packages:
 #    - openjdk-7-jre
-#    - lftp
+    - lftp
 #    - libsaxon-java
 #    - libsaxonb-java
 script:
