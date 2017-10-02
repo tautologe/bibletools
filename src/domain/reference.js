@@ -109,7 +109,7 @@ class CitationStyle {
 }
 
 const flattenArray = (arrays) => [].concat.apply([], arrays);
-const escapeForRegExp = (str) => str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+const escapeForRegExp = (str) => str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&");
 const removeWhitespace = (str) => str.replace(/\s/g, '');
 
 class ReferenceParser {
