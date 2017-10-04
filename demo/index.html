@@ -13,13 +13,8 @@
                     <p>Hier Text anpassen/eingeben, der Bibelstellen enthält, Beispiele</p>
                 </section>
                 <div contentEditable="true" id="user-input">
-                Bibelstellen können einzelne Verse referenzieren, wie 1. Mo 4, 23 oder mehrere Verse umfassen Jos 4, 12-20. 
-                Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1,15 - 2,4.
-                Mal steht hinter dem Buch ein Punkt Röm. 4,1 oder es fehlt das Leerzeichen und kein Vers angegeben Offb22.
-                <br /><br />
-                Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.7-9.20.
-                Zeilenumbrüche Gen 2,<br />
-                23 sind kein Problem.
+                        Mit den Seligpreisungen in Mt 5,3-12 beginnt bei Matthäus die Bergpredigt.
+                        Sie entwickelt die Gedanken der Feldrede aus Lk 6,20-23 weiter.
                 </div>
                 <pre id="detected-json"></pre>
             </div>
@@ -31,7 +26,17 @@
         <div>
             <h3>Funktionen:</h3>
             <ul>
-                <li>Erkennung und Auflösung von Bibelstellenangaben in beliebigen Texten</li>
+                <li>Erkennung und Auflösung von Bibelstellenangaben in beliebigen Texten
+                    <div>
+                        Bibelstellen können einzelne Verse referenzieren, wie 1. Mo 4, 23 oder mehrere Verse umfassen Jos 4, 12-20. 
+                        Auch Kapitel übergreifende Angaben werden erkannt: 1. Mo 1,15 - 2,4.
+                        Mal steht hinter dem Buch ein Punkt Röm. 4,1 oder es fehlt das Leerzeichen und kein Vers angegeben Offb22.
+                        <br /><br />
+                        Auch Bibelverse mit Punkt getrennt werden erkannt: 1. Mo 3,4.7-9.20.
+                        Zeilenumbrüche Gen 2,<br />
+                        23 sind kein Problem.
+                    </div>
+                </li>
                 <li>Anzeige des referenzieren Bibeltextes (lizenzfreie Übersetzung)</li>
                 <li>Verse können mit der URL vorausgewählt werden, z.B. <a href="#q=Joh3,16">#q=Joh3,16</a></li>
                 <li>Anzeige von Parallelstellen</li>
@@ -48,7 +53,7 @@
             <h3>Beschränkungen:</h3>
             <ul>
                 <li>Nur deutsche Notationen und Buchnamen werden erkannt</li>
-                <li>Nicht alle Varianten der Buchnamen werden erkannt (siehe unten)</li>
+                <li>Nicht alle Varianten der Buchnamen werden erkannt</li>
                 <!--<li>Es erfolgt keine Prüfung ob der Vers/das Kapitel wirklich existiert (z.B. 1. Mo 4,99; Obd 2,1)</li>-->
                 <li>Bei Büchern mit nur einem Kapitel muss die Kapitelnummer 1 mit angegeben werden. Obd 10 für Obd 1,10 wird nicht erkannt.</li>
                 <li>Wenn man dem Link folgt: bibleserver.com erkennt beim Markieren nicht alle Varianten der Versangabe</li>
