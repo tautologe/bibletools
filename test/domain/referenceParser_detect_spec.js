@@ -1,4 +1,4 @@
-import {ReferenceParser} from '../../src/domain/reference';
+import {ReferenceParser} from '../../src/domain/reference.js';
 import assert from 'assert';
 
 const parser = ReferenceParser.DEFAULT;

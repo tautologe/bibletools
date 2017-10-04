@@ -3,7 +3,7 @@
     "targets": {
       "browsers": ["last 2 versions", "iOS > 7"]
     }
-  }], "babili"],
+  }], ["minify", {"mangle": false}]],
   "plugins": ["transform-es2015-modules-umd"],
   "sourceMaps": true
 }

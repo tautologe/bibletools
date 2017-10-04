@@ -11,15 +11,15 @@
     "provision": "docker run --rm --volume=$(pwd)/:/shared -it tautologe/saxon bash -c \"/shared/provision/fetchBible.sh\""
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-transform-es2015-modules-umd": "^6.23.0",
-    "babel-preset-babili": "0.0.11",
-    "babel-preset-env": "^1.5.2",
-    "babel-register": "^6.23.0",
-    "eslint": "^4.8.0",
+    "babel-cli": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-es2015-modules-umd": "6.23.0",
+    "babel-preset-minify": "0.2.0",
+    "babel-preset-env": "1.6.0",
+    "babel-register": "6.23.0",
+    "eslint": "4.8.0",
     "mocha": "4.0.0",
-    "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.4.5"
+    "webpack": "3.6.0",
+    "webpack-dev-server": "2.9.1"
   }
 }

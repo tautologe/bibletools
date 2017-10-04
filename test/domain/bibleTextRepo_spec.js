@@ -1,7 +1,7 @@
 import assert from 'assert';
-import {Verse, BibleText, BibleTextRepo} from '../../src/domain/bibleText';
-import {BibleModule} from '../../src/domain/bibleModule';
-import {Reference} from '../../src/domain/reference';
+import {Verse, BibleText, BibleTextRepo} from '../../src/domain/bibleText.js';
+import {BibleModule} from '../../src/domain/bibleModule.js';
+import {Reference} from '../../src/domain/reference.js';
 
 describe('bibleTextRepo', function () {
     const getJsonLoaderStub = (expectedInput, requiredOutput) => ({
