@@ -4,7 +4,7 @@ const BibleTextRenderer = function (_window) {
         d.appendChild(_window.document.createTextNode(unsafeString));
         return d.innerHTML;
     };
-    const createStrongLinks = (text) => text.replace(/([GH][0-9]{1,4})/g, "<span class='strongReference' data-strongkey='$1'>$1</span>");
+    const createStrongLinks = (text) => text.replace(/\s\[([GH][0-9]{1,4})\]/g, "<sup class='strongReference' title='$1' data-strongkey='$1'>$1</sup> ");
 
     const renderBibleReferences = (rawReference, bibleText) => {
         const uriEscapeReference = (reference) => encodeURIComponent(reference.replace(/\s/g, ''));
