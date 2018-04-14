@@ -1,14 +1,14 @@
 /* global window */
 import {ReferenceParser} from './domain/reference';
-import {BibleTextRepo} from './domain/bibleText';
+import BibleTextRepo from './repo/BibleTextRepo';
 import {BibleModule} from './domain/bibleModule';
-import {CrossReferenceRepo} from './domain/crossReference';
+import CrossReferenceRepo from './repo/CrossReferenceRepo';
 import {LocationFragment} from './util/fragmentQuery';
 import {EventWorker} from './util/eventWorker';
 import {JSONLoader} from './util/jsonLoader';
 import {UserNotes} from './userNotes';
 import {BibleTextRenderer} from './render';
-import {StrongRepo} from './domain/strongs';
+import StrongRepo from './repo/StrongRepo';
 import {strongStatsTemplate} from './domain/strongStats';
 
 const crossReferenceRepo = new CrossReferenceRepo(JSONLoader);
