@@ -24,7 +24,7 @@ script:
 - npm run webpack
 #- ls -la demo/*
 #- npm run provision
-- lftp -d -e 'set dns:order "inet inet6"; mirror -R demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
+- lftp -e 'set dns:order "inet inet6"; mirror -R demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
 sudo: false
 #services:
 #- docker
