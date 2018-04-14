@@ -1,5 +1,6 @@
 import assert from 'assert';
-import {Verse, BibleText, BibleTextRepo} from '../../src/domain/bibleText.js';
+import {Verse, BibleText} from '../../src/domain/bibleText.js';
+import BibleTextRepo from '../../src/repo/BibleTextRepo';
 import {BibleModule} from '../../src/domain/bibleModule.js';
 import {Reference} from '../../src/domain/reference.js';
 
