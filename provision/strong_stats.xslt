@@ -20,7 +20,7 @@
       <xsl:sort select="count(current-group())" order="descending"></xsl:sort>
       <xsl:if test="count(current-group()) > 1">
         <strong count="{count(current-group())}">
-        <xsl:text>{"</xsl:text><xsl:apply-templates select="../../.." mode="language" /><xsl:value-of select="current-grouping-key()"/><xsl:text>": "</xsl:text>
+        <xsl:text>{"key": "</xsl:text><xsl:apply-templates select="../../.." mode="language" /><xsl:value-of select="current-grouping-key()"/><xsl:text>", "value": "</xsl:text>
         <xsl:value-of select="count(current-group())"/><xsl:text>"}</xsl:text>
         </strong>
       </xsl:if>
