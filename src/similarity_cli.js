@@ -71,7 +71,8 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
     td[class^=val0\\.2]{ background-color: #faa}
     td[class^=val0\\.1]{ background-color: #f33}
     td[class^=val0\\.0]{ background-color: #f00}
-    </style>`;
+    </style>
+    <a href="matrix_at.html">AT</a> - <a href="matrix_nt.html">NT</a>`;
     const headerHtmlAt = '<th>' + bookIndexAt.map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
     const rowsHtmlAt = similarity_matrix_at.map((row, index) => {
         const entries = `<td>${bookIndexAt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('')
