@@ -1,9 +1,9 @@
 {
-  "presets": [["env", {
+  "presets": [["@babel/preset-env", {
     "targets": {
       "browsers": ["last 2 versions", "iOS > 7"]
     }
   }], ["minify", {"mangle": false}]],
-  "plugins": ["transform-es2015-modules-umd"],
+  "plugins": ["@babel/transform-modules-umd"],
   "sourceMaps": true
 }
