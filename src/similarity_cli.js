@@ -65,6 +65,7 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
 
     const header = `<meta charset="utf-8">
     <style>
+    td.avg { background-color: #ddd}
     td[class^=val0\\.9]{ background-color: #0f0}
     td[class^=val0\\.8]{ background-color: #3f3}
     td[class^=val0\\.7]{ background-color: #cfc}
@@ -73,10 +74,12 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
     td[class^=val0\\.0]{ background-color: #f00}
     </style>
     <a href="matrix_at.html">AT</a> - <a href="matrix_nt.html">NT</a>`;
-    const headerHtmlAt = '<th>' + bookIndexAt.map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
+    const headerHtmlAt = '<th>' + (bookIndexAt.concat(["Ø"])).map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
     const rowsHtmlAt = similarity_matrix_at.map((row, index) => {
-        const entries = `<td>${bookIndexAt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('')
-        return `<tr>${entries}</tr>`
+        const entries = `<td>${bookIndexAt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('');
+        const avg = (row.reduce((sum, next) => sum + parseFloat(next), 0)/row.length).toPrecision(2);
+        const avgCell = `<td class="avg val${avg}">${avg}</td>`;
+        return `<tr>${entries + avgCell}</tr>`
     }).join('');
     fs.writeFile("data/matrix_at.html", header + '<table>' + headerHtmlAt + rowsHtmlAt + '</table>', function(err) {
         if(err) {
@@ -84,10 +87,12 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
         }
     });
 
-    const headerHtmlNt = '<th>' + bookIndexNt.map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
+    const headerHtmlNt = '<th>' + (bookIndexNt.concat(["Ø"])).map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
     const rowsHtmlNt = similarity_matrix_nt.map((row, index) => {
-        const entries = `<td>${bookIndexNt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('')
-        return `<tr>${entries}</tr>`
+        const entries = `<td>${bookIndexNt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('');
+        const avg = (row.reduce((sum, next) => sum + parseFloat(next), 0)/row.length).toPrecision(2);
+        const avgCell = `<td class="avg val${avg}">${avg}</td>`;
+        return `<tr>${entries + avgCell}</tr>`
     }).join('');
     fs.writeFile("data/matrix_nt.html", header + '<table>' + headerHtmlNt + rowsHtmlNt + '</table>', function(err) {
         if(err) {
