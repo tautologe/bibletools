@@ -3,7 +3,7 @@
   "description": "Detecting bible links in a text",
   "version": "0.0.1",
   "scripts": {
-    "test": "mocha --recursive --compilers js:@babel/register",
+    "test": "mocha --recursive --require @babel/register",
     "build": "echo '[ERROR] deprecated command, use npm run webpack instead'; exit 1; babel src --source-maps --out-file demo/bundle.js",
     "webpack": "webpack --mode=production",
     "start": "webpack-dev-server --mode=development --progress --colors",

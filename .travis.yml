@@ -6,9 +6,9 @@ env:
 language: node_js
 dist: trusty
 node_js:
-- '8'
+- 'lts/*'
 install:
-- npm install
+- yarn
 addons:
   apt:
     packages:
@@ -19,9 +19,9 @@ addons:
 script:
 #- provision/fetchBible.sh
 #- ls -la *
-- npm run eslint src/
-- npm test
-- npm run webpack
+- yarn run eslint src/
+- yarn test
+- yarn run webpack
 #- ls -la demo/*
 #- npm run provision
 - lftp -e 'set dns:order "inet inet6"; mirror -R demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
