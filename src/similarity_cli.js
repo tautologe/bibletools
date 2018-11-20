@@ -63,12 +63,21 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
         }
     });
 
+    const header = `<meta charset="utf-8">
+    <style>
+    td[class^=val0\\.9]{ background-color: #0f0}
+    td[class^=val0\\.8]{ background-color: #3f3}
+    td[class^=val0\\.7]{ background-color: #cfc}
+    td[class^=val0\\.2]{ background-color: #faa}
+    td[class^=val0\\.1]{ background-color: #f33}
+    td[class^=val0\\.0]{ background-color: #f00}
+    </style>`;
     const headerHtmlAt = '<th>' + bookIndexAt.map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
     const rowsHtmlAt = similarity_matrix_at.map((row, index) => {
-        const entries = `<td>${bookIndexAt[index]}</td>` + row.map(entry => `<td>${entry}</td>`).join('')
+        const entries = `<td>${bookIndexAt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('')
         return `<tr>${entries}</tr>`
     }).join('');
-    fs.writeFile("data/matrix_at.html", '<table>' + headerHtmlAt + rowsHtmlAt + '</table>', function(err) {
+    fs.writeFile("data/matrix_at.html", header + '<table>' + headerHtmlAt + rowsHtmlAt + '</table>', function(err) {
         if(err) {
             return console.log(err);
         }
@@ -76,10 +85,10 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
 
     const headerHtmlNt = '<th>' + bookIndexNt.map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
     const rowsHtmlNt = similarity_matrix_nt.map((row, index) => {
-        const entries = `<td>${bookIndexNt[index]}</td>` + row.map(entry => `<td>${entry}</td>`).join('')
+        const entries = `<td>${bookIndexNt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('')
         return `<tr>${entries}</tr>`
     }).join('');
-    fs.writeFile("data/matrix_nt.html", '<table>' + headerHtmlNt + rowsHtmlNt + '</table>', function(err) {
+    fs.writeFile("data/matrix_nt.html", header + '<table>' + headerHtmlNt + rowsHtmlNt + '</table>', function(err) {
         if(err) {
             return console.log(err);
         }
