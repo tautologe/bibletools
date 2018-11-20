@@ -20,7 +20,7 @@ const stopWords = ["G2532","G846","G1519","G1151","G3756","G2192", "G1161",
 "G3739", "G5209", "G5213", "G5101", "G1096", "G1537", "G3326",
 "H559", "H6440", "H2930", "H5922", "H6925"];
  
-fs.readFile('demo/repo/bible/strong_stats2.json', 'utf8', function(err, contents) {
+fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
 
     const strong_matrix_sparse = []
 
