@@ -1,19 +1,26 @@
 import fs from 'fs';
 import {createVektors} from './domain/stats/strongVektors';
+import {createSimilarityMatrixFromVektors} from './domain/stats/similarity';
+import {displayAsTable} from './matrixToHtml';
 
 const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
 const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
 
-// helper function for creating the dot product
-const dot_product = (vektor_a, vektor_b) => {
-    return vektor_a.map((entry, index) => {
-        if (vektor_b[index]) {
-            return entry * vektor_b[index]
-        } else {
-            return 0;
+const writeToFileAsJson = (filename, content) => {
+    fs.writeFile(filename, JSON.stringify(content, null, 2), function(err) {
+        if(err) {
+            return console.log(err);
         }
-    }).reduce((sum, next) => sum + next, 0);
-};
+    });
+}
+
+const writeToFile = (filename, content) => {
+    fs.writeFile(filename, content, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+    });
+}
 
 const stopWords = ["G2532","G846","G1519","G1151","G3756","G2192", "G1161",
 "G1722", "G1063", "G3754", "G1909", "G2076", "G3004", "G2036", "G4314",
@@ -26,71 +33,17 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
     const strong_normalized_at = strong_normalized.slice(0,39);
     const strong_normalized_nt = strong_normalized.slice(39);
 
-    fs.writeFile("data/strong_vektors_at.json", JSON.stringify(strong_normalized_at, null, 2), function(err) {
-        if(err) {
-            return console.log(err);
-        }
-    });
-    fs.writeFile("data/strong_vektors_nt.json", JSON.stringify(strong_normalized_nt, null, 2), function(err) {
-        if(err) {
-            return console.log(err);
-        }
-    });
+    writeToFileAsJson("data/strong_vektors_at.json", strong_normalized_at);
+    writeToFileAsJson("data/strong_vektors_nt.json", strong_normalized_nt);
 
+    const similarity_matrix_at = createSimilarityMatrixFromVektors(strong_normalized_at, 2);
+    const similarity_matrix_nt = createSimilarityMatrixFromVektors(strong_normalized_nt, 2);
 
-    // Create similarity matrix of all bible books
-    const similarity_matrix_at = strong_normalized_at.map(bookA => strong_normalized_at.map(bookB => dot_product(bookA, bookB).toPrecision(2)));
-    fs.writeFile("data/matrix_at.json", JSON.stringify(similarity_matrix_at, null, 2), function(err) {
-        if(err) {
-            return console.log(err);
-        }
-    });
-    const similarity_matrix_nt = strong_normalized_nt.map(bookA => strong_normalized_nt.map(bookB => dot_product(bookA, bookB).toPrecision(2)))
-    fs.writeFile("data/matrix_nt.json", JSON.stringify(similarity_matrix_nt, null, 2), function(err) {
-        if(err) {
-            return console.log(err);
-        }
-    });
+    writeToFileAsJson("data/matrix_at.json", similarity_matrix_at);
+    writeToFileAsJson("data/matrix_nt.json", similarity_matrix_nt);
 
-    const header = `<meta charset="utf-8">
-    <style>
-    td.avg { background-color: #ddd}
-    td[class^=val0\\.9]{ background-color: #0f0}
-    td[class^=val0\\.8]{ background-color: #3f3}
-    td[class^=val0\\.7]{ background-color: #cfc}
-    td[class^=val0\\.2]{ background-color: #faa}
-    td[class^=val0\\.1]{ background-color: #f33}
-    td[class^=val0\\.0]{ background-color: #f00}
-    </style>
-    <a href="matrix_at.html">AT</a> - <a href="matrix_nt.html">NT</a>`;
-    const headerHtmlAt = '<th>' + (bookIndexAt.concat(["Ø"])).map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
-    const rowsHtmlAt = similarity_matrix_at.map((row, index) => {
-        const entries = `<td>${bookIndexAt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('');
-        const avg = (row.reduce((sum, next) => sum + parseFloat(next), 0)/row.length).toPrecision(2);
-        const avgCell = `<td class="avg val${avg}">${avg}</td>`;
-        return `<tr>${entries + avgCell}</tr>`
-    }).join('');
-    fs.writeFile("data/matrix_at.html", header + '<table>' + headerHtmlAt + rowsHtmlAt + '</table>', function(err) {
-        if(err) {
-            return console.log(err);
-        }
-    });
-
-    const headerHtmlNt = '<th>' + (bookIndexNt.concat(["Ø"])).map(bookName => `<td>${bookName}</td>`).join('') + '</th>';
-    const rowsHtmlNt = similarity_matrix_nt.map((row, index) => {
-        const entries = `<td>${bookIndexNt[index]}</td>` + row.map(entry => `<td class="val${entry}">${entry}</td>`).join('');
-        const avg = (row.reduce((sum, next) => sum + parseFloat(next), 0)/row.length).toPrecision(2);
-        const avgCell = `<td class="avg val${avg}">${avg}</td>`;
-        return `<tr>${entries + avgCell}</tr>`
-    }).join('');
-    fs.writeFile("data/matrix_nt.html", header + '<table>' + headerHtmlNt + rowsHtmlNt + '</table>', function(err) {
-        if(err) {
-            return console.log(err);
-        }
-    });
-
-
-
+    writeToFile("data/matrix_at.html", displayAsTable(similarity_matrix_at, bookIndexAt));
+    writeToFile("data/matrix_nt.html", displayAsTable(similarity_matrix_nt, bookIndexNt));
 });
  
 
