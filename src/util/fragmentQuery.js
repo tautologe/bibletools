@@ -1,5 +1,5 @@
 const _parseFragmentString = (fragmentString) => {
-    if (fragmentString.lengh < 3) {
+    if (fragmentString.length < 3) {
         return;
     }
     const paramStrings = fragmentString.substring(1).split('&')
@@ -27,7 +27,7 @@ class LocationFragment {
         return this.getQuery() && this.getQuery()[key];
     }
     hasParameter (key) {
-        return this.getParameter(key) && this.getParameter(key).length > 1;
+        return this.getParameter(key) && this.getParameter(key).length > 0;
     }
     setParameter (key, value) {
         const query = this.getQuery();

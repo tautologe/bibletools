@@ -1,31 +1,50 @@
 <html>
-    
     <h1>Strong stats</h1>
+    <h2 id="bookTitle"></h2>
     <section id="strongs"></section>
     <script type="module">
-            import {getCommonComponents, dot_product} from './domain/stats/similarity.mjs'
-            
-            const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
-            const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
+        import {getCommonComponents, dot_product} from './domain/stats/similarity.mjs'
+        import {LocationFragment} from './util/fragmentQuery.js';
+        
+        const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
+        const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
 
-            fetch('/data/strong_vektors_at.json').then((response) => {
-                return response.json();
-            }).then(bookVektors => {
-    
-                const sortByRelevance = (x, y) => x.relevance > y.relevance ? 1 : x.relevance == y.relevance ? 0 : -1;
-    
-                getCommonComponents(bookVektors[1], bookVektors[20], 'H')
-                    .filter(entry => entry.relevance > 0)
-                    .sort(sortByRelevance)
-                    .reverse()
-                    .slice(0, 30)
-                    .forEach(element => {
-                       fetch(`/demo/repo/strong/${element.key}.json`).then(response => response.json()).then(strong => {
-                           const germanTitle = strong.occurrences[0].title.replace(/\([^)]*\)/, '').trim();
-                           const strongLine = `${element.key}: ${germanTitle} (${element.relevance.toPrecision(2)}) <br />`;
-                           document.getElementById('strongs').innerHTML += strongLine
-                       })
+        fetch('/data/strong_vektors_at.json').then((response) => {
+            return response.json();
+        }).then(bookVektors => {
+            const sortByRelevance = (x, y) => x.relevance > y.relevance ? 1 : x.relevance == y.relevance ? 0 : -1;
+
+            const locationFragment = new LocationFragment(window);
+            let bookIndex1 = 1;
+            let bookIndex2 = 20;
+            console.log(locationFragment.hasParameter('i1'));
+            if (locationFragment.hasParameter('i1')) {
+                bookIndex1 = parseInt(locationFragment.getParameter('i1'));
+                
+            }
+            if (locationFragment.hasParameter('i2')) {
+                bookIndex2 = parseInt(locationFragment.getParameter('i2'));
+                console.log(bookIndex2);
+            }
+
+            const bookSimilarity = dot_product(bookVektors[bookIndex1], bookVektors[bookIndex2]).toPrecision(2);
+
+            const bookTitle = `${bookIndexAt[bookIndex1]} compared with ${bookIndexAt[bookIndex2]}: ${bookSimilarity} (${(bookSimilarity * 100).toPrecision(2)}%)`;
+
+            document.getElementById('bookTitle').innerHTML = bookTitle;
+
+            getCommonComponents(bookVektors[bookIndex1], bookVektors[bookIndex2], 'H')
+                .filter(entry => entry.relevance > 0)
+                .sort(sortByRelevance)
+                .reverse()
+                .slice(0, 30)
+                .forEach(element => {
+                    fetch(`/demo/repo/strong/${element.key}.json`).then(response => response.json()).then(strong => {
+                        const germanTitle = strong.occurrences[0].title.replace(/\([^)]*\)/, '').trim();
+                        const strongLine = `${element.key}: ${germanTitle} (${element.relevance.toPrecision(2)}) <br />`;
+                        document.getElementById('strongs').innerHTML += strongLine
                     });
-            });
-        </script>
+                });
+        });
+    </script>
 </html>
