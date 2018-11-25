@@ -7,10 +7,12 @@ const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sa
 const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
 
 const writeToFileAsJson = (filename, content) => {
-    fs.writeFile(filename, JSON.stringify(content, null, 2), function(err) {
+    const fileContent = JSON.stringify(content, null, 2);
+    fs.writeFile(filename, fileContent, function(err) {
         if(err) {
             return console.log(err);
         }
+        console.log(`${fileContent.length} (chars) data written to ${filename}`);
     });
 }
 
@@ -19,6 +21,7 @@ const writeToFile = (filename, content) => {
         if(err) {
             return console.log(err);
         }
+        console.log(`${content.length} (chars) data written to ${filename}`);
     });
 }
 
@@ -29,9 +32,10 @@ const stopWords = ["G2532","G846","G1519","G1151","G3756","G2192", "G1161",
 "H559", "H6440", "H2930", "H5922", "H6925"];
  
 fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
-    const strong_normalized = createVektors(JSON.parse(contents), stopWords);
-    const strong_normalized_at = strong_normalized.slice(0,39);
-    const strong_normalized_nt = strong_normalized.slice(39);
+    const strong_counts_at = JSON.parse(contents).slice(0, 39);
+    const strong_counts_nt = JSON.parse(contents).slice(39);
+    const strong_normalized_at = createVektors(strong_counts_at, stopWords);
+    const strong_normalized_nt = createVektors(strong_counts_nt, stopWords);
 
     writeToFileAsJson("data/strong_vektors_at.json", strong_normalized_at);
     writeToFileAsJson("data/strong_vektors_nt.json", strong_normalized_nt);
@@ -45,6 +49,3 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
     writeToFile("data/matrix_at.html", displayAsTable(similarity_matrix_at, bookIndexAt));
     writeToFile("data/matrix_nt.html", displayAsTable(similarity_matrix_nt, bookIndexNt));
 });
- 
-
-

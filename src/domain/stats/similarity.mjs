@@ -16,6 +16,17 @@ const createSimilarityMatrixFromVektors = (vektors, precision) => {
     }
 };
 
+const getCommonComponents = (vektor_a, vektor_b, strongPrefix) => {
+    const getKey = (strongPrefix, index) => strongPrefix + index;
+    return vektor_a.map((entry, index) => {
+        if (vektor_b[index]) {
+            return entry * vektor_b[index]
+        } else {
+            return 0;
+        }
+    }).map((entry, index) => ({key: getKey(strongPrefix, index), relevance: entry}));
+};
+
 export {
-    dot_product, createSimilarityMatrixFromVektors
+    dot_product, createSimilarityMatrixFromVektors, getCommonComponents
 }
