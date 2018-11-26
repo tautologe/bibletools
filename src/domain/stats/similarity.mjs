@@ -16,15 +16,24 @@ const createSimilarityMatrixFromVektors = (vektors, precision) => {
     }
 };
 
+
+
 const getCommonComponents = (vektor_a, vektor_b, strongPrefix) => {
     const getKey = (strongPrefix, index) => strongPrefix + index;
+
+    const sortByRelevance = (x, y) => x.relevance > y.relevance ? 1 : x.relevance === y.relevance ? 0 : -1;
+
     return vektor_a.map((entry, index) => {
         if (vektor_b[index]) {
             return entry * vektor_b[index]
         } else {
             return 0;
         }
-    }).map((entry, index) => ({key: getKey(strongPrefix, index), relevance: entry}));
+    })
+        .map((entry, index) => ({key: getKey(strongPrefix, index), relevance: entry}))
+        .filter(entry => entry.relevance > 0)
+        .sort(sortByRelevance)
+        .reverse();
 };
 
 export {

@@ -12,20 +12,17 @@
         fetch('/data/strong_vektors_at.json').then((response) => {
             return response.json();
         }).then(bookVektors => {
-            const sortByRelevance = (x, y) => x.relevance > y.relevance ? 1 : x.relevance === y.relevance ? 0 : -1;
             let bookIndex1 = 1;
             let bookIndex2 = 20;
 
             // TODO AT/NT, onhashchange
             const locationFragment = new LocationFragment(window);
-            console.log(locationFragment.hasParameter('i1'));
             if (locationFragment.hasParameter('i1')) {
                 bookIndex1 = parseInt(locationFragment.getParameter('i1'));
                 
             }
             if (locationFragment.hasParameter('i2')) {
                 bookIndex2 = parseInt(locationFragment.getParameter('i2'));
-                console.log(bookIndex2);
             }
 
             const bookSimilarity = dot_product(bookVektors[bookIndex1], bookVektors[bookIndex2]).toPrecision(2);
@@ -34,19 +31,21 @@
 
             document.getElementById('bookTitle').innerHTML = bookTitle;
 
-            getCommonComponents(bookVektors[bookIndex1], bookVektors[bookIndex2], 'H')
-                .filter(entry => entry.relevance > 0)
-                .sort(sortByRelevance)
-                .reverse()
-                .slice(0, 30)
-                .forEach(element => {
-                    // TODO this generates text in random order, restore order by relevance
-                    fetch(`/demo/repo/strong/${element.key}.json`).then(response => response.json()).then(strong => {
-                        const germanTitle = strong.occurrences[0].title.replace(/\([^)]*\)/, '').trim();
-                        const strongLine = `${element.key}: ${germanTitle} (${element.relevance.toPrecision(2)}) <br />`;
-                        document.getElementById('strongs').innerHTML += strongLine
-                    });
+            const commonStrongComponents = getCommonComponents(bookVektors[bookIndex1], bookVektors[bookIndex2], 'H').slice(0, 30);
+
+            const fetchedStrongDetails = commonStrongComponents.map(strongComponent => {
+                return fetch(`/demo/repo/strong/${strongComponent.key}.json`)
+                    .then(response => response.json())
+                    .then(strongDetails => ({strongComponent, strongDetails}));
+            });
+
+            Promise.all(fetchedStrongDetails).then(allStrongDetails => {
+                return allStrongDetails.forEach(({strongComponent, strongDetails}) => {
+                    const germanTitle = strongDetails.occurrences[0].title.replace(/\([^)]*\)/, '').trim();
+                    const strongLine = `${strongComponent.key}: ${germanTitle} (${strongComponent.relevance.toPrecision(2)}) <br />`;
+                    document.getElementById('strongs').innerHTML += strongLine;
                 });
+            });
         });
     </script>
 </html>
