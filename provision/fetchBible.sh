@@ -22,23 +22,23 @@ mv "SF_2009-01-22_GER_ELB1905STR_(ELBERFELDER 1905).xml" elb1905.xml
 wget -q http://bgfdb.de/zefania.de/wp-content/uploads/2017/05/linklist.zip
 unzip linklist.zip
 
-mkdir -p demo/repo
-chmod -R a+w demo/repo
+mkdir -p data/repo
+chmod -R a+w data/repo
 
 # Transform bible module
-saxonb-xslt -xsl:provision/zefania2json.xslt -s:./lut1912.xml  -ext:on externalStrongBibleFileName="./lut1545.xml" outputDirectory="demo/repo" > /dev/null
+saxonb-xslt -xsl:provision/zefania2json.xslt -s:./lut1912.xml  -ext:on externalStrongBibleFileName="./lut1545.xml" outputDirectory="data/repo" > /dev/null
 # Transform bible module
-saxonb-xslt -xsl:provision/zefania2json.xslt -s:./elb1905.xml  -ext:on outputDirectory="demo/repo" > /dev/null
+saxonb-xslt -xsl:provision/zefania2json.xslt -s:./elb1905.xml  -ext:on outputDirectory="data/repo" > /dev/null
 # Transform Konkordanz and Strong module
-saxonb-xslt -xsl:provision/konkordanz.xslt -s:./elb1905-konkordanz.xml -ext:on externalStrongDictFileName="provision/strong.xml" outputDirectory="demo/repo" > /dev/null
+saxonb-xslt -xsl:provision/konkordanz.xslt -s:./elb1905-konkordanz.xml -ext:on externalStrongDictFileName="provision/strong.xml" outputDirectory="data/repo" > /dev/null
 # Create stronglist
 saxonb-xslt -xsl:provision/strong_list.xslt -s:./elb1905-konkordanz.xml -ext:on externalStrongDictFileName="provision/strong.xml" > data/stronglist.json
 # Transform linklist
-saxonb-xslt -xsl:provision/linklist.xslt -s:./linklist.xml -o:demo/repo/linklist.json -ext:on
+saxonb-xslt -xsl:provision/linklist.xslt -s:./linklist.xml -o:data/repo/linklist.json -ext:on
 
-saxonb-xslt -xsl:provision/moduleStructure.xslt -s:./lut1912.xml > demo/repo/bible/LUTH1912AP/structure.json
-saxonb-xslt -xsl:provision/moduleStructure.xslt -s:./elb1905.xml > demo/repo/bible/ELB1905STR/structure.json
+saxonb-xslt -xsl:provision/moduleStructure.xslt -s:./lut1912.xml > data/repo/bible/LUTH1912AP/structure.json
+saxonb-xslt -xsl:provision/moduleStructure.xslt -s:./elb1905.xml > data/repo/bible/ELB1905STR/structure.json
 
-saxonb-xslt -xsl:provision/strong_stats.xslt -s:./elb1905.xml > demo/repo/bible/strong_stats.json
+saxonb-xslt -xsl:provision/strong_stats.xslt -s:./elb1905.xml > data/repo/bible/strong_stats.json
 
-chmod -R a+w demo/repo
+chmod -R a+w data/repo
