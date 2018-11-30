@@ -1,4 +1,4 @@
-import { BibleText, Verse } from '../domain/bibleText';
+import { BibleText, Verse } from '../domain/bibleText.js';
 
 const flattenArray = (arrays) => [].concat.apply([], arrays);
 

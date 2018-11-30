@@ -1,15 +1,15 @@
 /* global window */
-import {ReferenceParser} from './domain/reference';
-import BibleTextRepo from './repo/BibleTextRepo';
-import {BibleModule} from './domain/bibleModule';
-import CrossReferenceRepo from './repo/CrossReferenceRepo';
-import {LocationFragment} from './util/fragmentQuery';
-import {EventWorker} from './util/eventWorker';
-import {JSONLoader} from './util/jsonLoader';
-import {UserNotes} from './userNotes';
-import {BibleTextRenderer} from './render';
-import StrongRepo from './repo/StrongRepo';
-import {strongStatsTemplate} from './domain/strongStats';
+import {ReferenceParser} from './domain/reference.js';
+import BibleTextRepo from './repo/BibleTextRepo.js';
+import {BibleModule} from './domain/bibleModule.js';
+import CrossReferenceRepo from './repo/CrossReferenceRepo.js';
+import {LocationFragment} from './util/fragmentQuery.js';
+import {EventWorker} from './util/eventWorker.js';
+import {JSONLoader} from './util/jsonLoader.js';
+import {UserNotes} from './userNotes.js';
+import {BibleTextRenderer} from './render.js';
+import StrongRepo from './repo/StrongRepo.js';
+import {strongStatsTemplate} from './domain/strongStats.js';
 
 const crossReferenceRepo = new CrossReferenceRepo(JSONLoader);
 const bibleTextRepo = new BibleTextRepo(JSONLoader);

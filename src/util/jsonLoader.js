@@ -7,7 +7,7 @@ const JSONLoader = {
         }
         const promise = new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
-            req.open('GET', 'repo/' + file, true);
+            req.open('GET', '/data/repo/' + file, true);
             req.onload = () => {
                 if (req.status == '200') {
                     resolve(JSON.parse(req.responseText));

@@ -24,9 +24,10 @@ script:
 - yarn run webpack
 #- ls -la demo/*
 #- npm run provision
-- lftp -e 'set dns:order "inet inet6"; mirror -R demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
-- lftp -e 'set dns:order "inet inet6"; mirror -R dist/demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
-- lftp -e 'set dns:order "inet inet6"; mirror -R data /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
+#- lftp -e 'set dns:order "inet inet6"; mirror -R demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
+#- lftp -e 'set dns:order "inet inet6"; mirror -R dist/demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
+- lftp -e 'set dns:order "inet inet6"; mirror -R src /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
+- lftp -e 'set dns:order "inet inet6"; mirror -R data /data; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
 sudo: false
 #services:
 #- docker

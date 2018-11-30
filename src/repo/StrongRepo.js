@@ -1,5 +1,5 @@
-import {Reference} from '../domain/reference'
-import {StrongDefinition} from '../domain/strongs'
+import {Reference} from '../domain/reference.js'
+import {StrongDefinition} from '../domain/strongs.js'
 
 
 //TODO duplicated from crossReferences => extract

@@ -50,7 +50,7 @@
                 const commonStrongComponents = getCommonComponents(bookVektors[book1.index], bookVektors[book2.index], 'H').slice(0, 30);
 
                 const fetchedStrongDetails = commonStrongComponents.map(strongComponent => {
-                    return fetch(`/demo/repo/strong/${strongComponent.key}.json`)
+                    return fetch(`/data/repo/strong/${strongComponent.key}.json`)
                         .then(response => response.json())
                         .then(strongDetails => ({strongComponent, strongDetails}));
                 });
