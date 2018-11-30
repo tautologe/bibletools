@@ -1,71 +1,37 @@
 <html>
     <h1>Strong stats</h1>
+    <style>
+        #bookPicker {display: flex; width:100%}
+        #bookPicker > section { flex: 1 }
+        #bookPicker > section > span {
+            margin: 1px; padding: 2px; border: 1px solid #abc;
+            display: inline-block;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+    <section id="bookPicker">
+        <section id="bookPickerLeft">
+            <span class="bookPicker" id="Gen-left">Gen</span><span class="bookPicker" id="Ex-left">Ex</span><span class="bookPicker" id="Lev-left">Lev</span><span class="bookPicker" id="Num-left">Num</span><span class="bookPicker" id="Dtn-left">Dtn</span>
+            <span class="bookPicker" id="Jos-left">Jos</span><span class="bookPicker" id="Ri-left">Ri</span><span class="bookPicker" id="Rut-left">Rut</span><span class="bookPicker" id="1 Sam-left">1 Sam</span><span class="bookPicker" id="2 Sam-left">2 Sam</span><span class="bookPicker" id="1 Kön-left">1 Kön</span><span class="bookPicker" id="2 Kön-left">2 Kön</span><span class="bookPicker" id="1 Chr-left">1 Chr</span><span class="bookPicker" id="2 Chr-left">2 Chr</span><span class="bookPicker" id="Esra-left">Esra</span><span class="bookPicker" id="Neh-left">Neh</span><span class="bookPicker" id="Est-left">Est</span><br />
+            <span class="bookPicker" id="Ijob-left">Ijob</span><span class="bookPicker" id="Ps-left">Ps</span><span class="bookPicker" id="Spr-left">Spr</span><span class="bookPicker" id="Koh-left">Koh</span><span class="bookPicker" id="Hld-left">Hld</span><br />
+            <span class="bookPicker" id="Jes-left">Jes</span><span class="bookPicker" id="Jer-left">Jer</span><span class="bookPicker" id="Klgl-left">Klgl</span><span class="bookPicker" id="Ez-left">Ez</span><span class="bookPicker" id="Dan-left">Dan</span><span class="bookPicker" id="Hos-left">Hos</span><span class="bookPicker" id="Joel-left">Joel</span><span class="bookPicker" id="Am-left">Am</span><span class="bookPicker" id="Obd-left">Obd</span><span class="bookPicker" id="Jona-left">Jona</span><span class="bookPicker" id="Mi-left">Mi</span><span class="bookPicker" id="Nah-left">Nah</span><span class="bookPicker" id="Hab-left">Hab</span><span class="bookPicker" id="Zef-left">Zef</span><span class="bookPicker" id="Hag-left">Hag</span><span class="bookPicker" id="Sach-left">Sach</span><span class="bookPicker" id="Mal-left">Mal</span><br />
+            <span class="bookPicker" id="Mt-left">Mt</span><span class="bookPicker" id="Mk-left">Mk</span><span class="bookPicker" id="Lk-left">Lk</span><span class="bookPicker" id="Joh-left">Joh</span><span class="bookPicker" id="Apg-left">Apg</span><br />
+            <span class="bookPicker" id="Röm-left">Röm</span><span class="bookPicker" id="1 Kor-left">1 Kor</span><span class="bookPicker" id="2 Kor-left">2 Kor</span><span class="bookPicker" id="Gal-left">Gal</span><span class="bookPicker" id="Eph-left">Eph</span><span class="bookPicker" id="Phil-left">Phil</span><span class="bookPicker" id="Kol-left">Kol</span><span class="bookPicker" id="1 Thess-left">1 Thess</span><span class="bookPicker" id="2 Thess-left">2 Thess</span><span class="bookPicker" id="1 Tim-left">1 Tim</span><span class="bookPicker" id="2 Tim-left">2 Tim</span><span class="bookPicker" id="Tit-left">Tit</span><span class="bookPicker" id="Phlm-left">Phlm</span><br />
+            <span class="bookPicker" id="Hebr-left">Hebr</span><span class="bookPicker" id="Jak-left">Jak</span><span class="bookPicker" id="1 Petr-left">1 Petr</span><span class="bookPicker" id="2 Petr-left">2 Petr</span><span class="bookPicker" id="1 Joh-left">1 Joh</span><span class="bookPicker" id="2 Joh-left">2 Joh</span><span class="bookPicker" id="3 Joh-left">3 Joh</span><span class="bookPicker" id="Jud-left">Jud</span><span class="bookPicker" id="Offb-left">Offb</span>
+        </section>
+        <section id="bookPickerRight">
+            <span class="bookPicker" id="Gen-right">Gen</span><span class="bookPicker" id="Ex-right">Ex</span><span class="bookPicker" id="Lev-right">Lev</span><span class="bookPicker" id="Num-right">Num</span><span class="bookPicker" id="Dtn-right">Dtn</span>
+            <span class="bookPicker" id="Jos-right">Jos</span><span class="bookPicker" id="Ri-right">Ri</span><span class="bookPicker" id="Rut-right">Rut</span><span class="bookPicker" id="1 Sam-right">1 Sam</span><span class="bookPicker" id="2 Sam-right">2 Sam</span><span class="bookPicker" id="1 Kön-right">1 Kön</span><span class="bookPicker" id="2 Kön-right">2 Kön</span><span class="bookPicker" id="1 Chr-right">1 Chr</span><span class="bookPicker" id="2 Chr-right">2 Chr</span><span class="bookPicker" id="Esra-right">Esra</span><span class="bookPicker" id="Neh-right">Neh</span><span class="bookPicker" id="Est-right">Est</span><br />
+            <span class="bookPicker" id="Ijob-right">Ijob</span><span class="bookPicker" id="Ps-right">Ps</span><span class="bookPicker" id="Spr-right">Spr</span><span class="bookPicker" id="Koh-right">Koh</span><span class="bookPicker" id="Hld-right">Hld</span><br />
+            <span class="bookPicker" id="Jes-right">Jes</span><span class="bookPicker" id="Jer-right">Jer</span><span class="bookPicker" id="Klgl-right">Klgl</span><span class="bookPicker" id="Ez-right">Ez</span><span class="bookPicker" id="Dan-right">Dan</span><span class="bookPicker" id="Hos-right">Hos</span><span class="bookPicker" id="Joel-right">Joel</span><span class="bookPicker" id="Am-right">Am</span><span class="bookPicker" id="Obd-right">Obd</span><span class="bookPicker" id="Jona-right">Jona</span><span class="bookPicker" id="Mi-right">Mi</span><span class="bookPicker" id="Nah-right">Nah</span><span class="bookPicker" id="Hab-right">Hab</span><span class="bookPicker" id="Zef-right">Zef</span><span class="bookPicker" id="Hag-right">Hag</span><span class="bookPicker" id="Sach-right">Sach</span><span class="bookPicker" id="Mal-right">Mal</span><br />
+            <span class="bookPicker" id="Mt-right">Mt</span><span class="bookPicker" id="Mk-right">Mk</span><span class="bookPicker" id="Lk-right">Lk</span><span class="bookPicker" id="Joh-right">Joh</span><span class="bookPicker" id="Apg-right">Apg</span><br />
+            <span class="bookPicker" id="Röm-right">Röm</span><span class="bookPicker" id="1 Kor-right">1 Kor</span><span class="bookPicker" id="2 Kor-right">2 Kor</span><span class="bookPicker" id="Gal-right">Gal</span><span class="bookPicker" id="Eph-right">Eph</span><span class="bookPicker" id="Phil-right">Phil</span><span class="bookPicker" id="Kol-right">Kol</span><span class="bookPicker" id="1 Thess-right">1 Thess</span><span class="bookPicker" id="2 Thess-right">2 Thess</span><span class="bookPicker" id="1 Tim-right">1 Tim</span><span class="bookPicker" id="2 Tim-right">2 Tim</span><span class="bookPicker" id="Tit-right">Tit</span><span class="bookPicker" id="Phlm-right">Phlm</span><br />
+            <span class="bookPicker" id="Hebr-right">Hebr</span><span class="bookPicker" id="Jak-right">Jak</span><span class="bookPicker" id="1 Petr-right">1 Petr</span><span class="bookPicker" id="2 Petr-right">2 Petr</span><span class="bookPicker" id="1 Joh-right">1 Joh</span><span class="bookPicker" id="2 Joh-right">2 Joh</span><span class="bookPicker" id="3 Joh-right">3 Joh</span><span class="bookPicker" id="Jud-right">Jud</span><span class="bookPicker" id="Offb-right">Offb</span>
+        </section>
+    </section>
+
     <h2 id="bookTitle"></h2>
     <section id="strongs"></section>
-    <script type="module">
-        import {getCommonComponents, dot_product} from './domain/stats/similarity.mjs'
-        import {LocationFragment} from './util/fragmentQuery.js';
-        
-        const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
-        const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
-        const isAt = (bookName) => bookIndexAt.indexOf(bookName) > -1;
-        const isNt = (bookName) => bookIndexNt.indexOf(bookName) > -1;
-
-        const locationFragment = new LocationFragment(window);
-        window.onhashchange = () => {    
-            loadParametersAndCompareBooks()
-        }
-
-        const loadParametersAndCompareBooks = () => {
-            const book1 = getBookFromParameter('i1');
-            const book2 = getBookFromParameter('i2');
-            
-            if (book1.testament === book2.testament) {
-                showComparison(book1, book2);
-            }
-        }
-
-
-        const getBookFromParameter = (parameterName) => {
-            if (locationFragment.hasParameter(parameterName)) {
-                const bookName = locationFragment.getParameter(parameterName);
-                if (isAt(bookName)) {
-                    return {testament: 'at', name: bookName, index: bookIndexAt.indexOf(bookName)}
-                }
-                if (isNt(bookName)) {
-                    return {testament: 'nt', name: bookName, index: bookIndexNt.indexOf(bookName)}
-                }
-            }
-        }
-
-        const showComparison = (book1, book2) => {
-            const strongVektorsFilename = '/data/strong_vektors_'+book1.testament+'.json';
-            fetch(strongVektorsFilename).then(response => response.json()).then(bookVektors => {
-                const bookSimilarity = dot_product(bookVektors[book1.index], bookVektors[book2.index]).toPrecision(2);
-
-                const bookTitle = `${book1.name} compared with ${book2.name}: ${bookSimilarity} (${(bookSimilarity * 100).toPrecision(2)}%)`;
-
-                document.getElementById('bookTitle').innerHTML = bookTitle;
-
-                const commonStrongComponents = getCommonComponents(bookVektors[book1.index], bookVektors[book2.index], 'H').slice(0, 30);
-
-                const fetchedStrongDetails = commonStrongComponents.map(strongComponent => {
-                    return fetch(`/data/repo/strong/${strongComponent.key}.json`)
-                        .then(response => response.json())
-                        .then(strongDetails => ({strongComponent, strongDetails}));
-                });
-
-                Promise.all(fetchedStrongDetails).then(allStrongDetails => {
-                    document.getElementById('strongs').innerHTML = "";
-                    return allStrongDetails.forEach(({strongComponent, strongDetails}) => {
-                        const germanTitle = strongDetails.occurrences[0].title.replace(/\([^)]*\)/, '').trim();
-                        const strongLine = `${strongComponent.key}: ${germanTitle} (${strongComponent.relevance.toPrecision(2)}) <br />`;
-                        document.getElementById('strongs').innerHTML += strongLine;
-                    });
-                });
-            });
-        }
-
-        loadParametersAndCompareBooks();     
-    </script>
+    <script type="module" src="app_strongStat.js"></script>
 </html>
