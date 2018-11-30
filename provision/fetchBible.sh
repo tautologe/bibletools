@@ -31,6 +31,8 @@ saxonb-xslt -xsl:provision/zefania2json.xslt -s:./lut1912.xml  -ext:on externalS
 saxonb-xslt -xsl:provision/zefania2json.xslt -s:./elb1905.xml  -ext:on outputDirectory="demo/repo" > /dev/null
 # Transform Konkordanz and Strong module
 saxonb-xslt -xsl:provision/konkordanz.xslt -s:./elb1905-konkordanz.xml -ext:on externalStrongDictFileName="provision/strong.xml" outputDirectory="demo/repo" > /dev/null
+# Create stronglist
+saxonb-xslt -xsl:provision/strong_list.xslt -s:./elb1905-konkordanz.xml -ext:on externalStrongDictFileName="provision/strong.xml" > data/stronglist.json
 # Transform linklist
 saxonb-xslt -xsl:provision/linklist.xslt -s:./linklist.xml -o:demo/repo/linklist.json -ext:on
 
