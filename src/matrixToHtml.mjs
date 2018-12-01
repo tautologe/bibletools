@@ -15,7 +15,7 @@ const calculateAverage = (numbers) => (numbers.reduce((sum, next) => sum + parse
 const displayAsTable = (matrix, columnNames) => {
     const tableHeader = '<th>' + (columnNames.concat(["Ø"])).map(columnName => `<td>${columnName}</td>`).join('') + '</th>';
     const tableRows = matrix.map((row, index) => {
-        const entries = `<td>${columnNames[index]}</td>` + row.map((entry, index2) => `<td class="val${entry}"><a href="/src/strong_stat.html#i1=${columnNames[index]}&i2=${columnNames[index2]}">${entry}</a></td>`).join('');
+        const entries = `<td>${columnNames[index]}</td>` + row.map((entry, index2) => `<td class="val${entry}"><a href="./#leftBook=${columnNames[index]}&rightBook=${columnNames[index2]}">${entry}</a></td>`).join('');
         const avgCell = `<td class="avg">${calculateAverage(row)}</td>`;
         return `<tr>${entries + avgCell}</tr>
         `;

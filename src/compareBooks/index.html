@@ -1,5 +1,6 @@
 <html>
     <meta charset="utf-8">
+    <link href="../style.css" rel="stylesheet" />
     <style>
         #bookPicker {display: flex; width:100%}
         #bookPicker > section { flex: 1 }
@@ -10,8 +11,13 @@
             cursor: pointer;
         }
     </style>
-
-    <h1>Strong stats</h1>
+<body>
+<main>
+    <h1>Bibelbücher vergleichen</h1>
+    <section>
+            <span>Vergleichstabelle zeigen: </span><a href="matrix_at.html">AT</a> - <a href="matrix_nt.html">NT</a>
+    </section>
+    <section>Bücher auswählen:</section>
     <section id="bookPicker">
         <section id="bookPickerLeft">
             <span class="bookPicker" id="Gen-left">Gen</span><span class="bookPicker" id="Ex-left">Ex</span><span class="bookPicker" id="Lev-left">Lev</span><span class="bookPicker" id="Num-left">Num</span><span class="bookPicker" id="Dtn-left">Dtn</span>
@@ -32,8 +38,11 @@
             <span class="bookPicker" id="Hebr-right">Hebr</span><span class="bookPicker" id="Jak-right">Jak</span><span class="bookPicker" id="1 Petr-right">1 Petr</span><span class="bookPicker" id="2 Petr-right">2 Petr</span><span class="bookPicker" id="1 Joh-right">1 Joh</span><span class="bookPicker" id="2 Joh-right">2 Joh</span><span class="bookPicker" id="3 Joh-right">3 Joh</span><span class="bookPicker" id="Jud-right">Jud</span><span class="bookPicker" id="Offb-right">Offb</span>
         </section>
     </section>
+    
+        <h2 id="bookTitle"></h2>
 
-    <h2 id="bookTitle"></h2>
     <section id="strongs"></section>
-    <script type="module" src="compareBooks.js"></script>
+</main>
+<script type="module" src="compareBooks.js"></script>
+</body>
 </html>
