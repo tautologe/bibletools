@@ -1,6 +1,6 @@
 /* global window, fetch, document */
-import {getCommonComponents, dot_product} from './domain/stats/similarity.mjs'
-import {LocationFragment} from './util/fragmentQuery.js';
+import {getCommonComponents, dot_product} from '../domain/stats/similarity.mjs'
+import {LocationFragment} from '../util/fragmentQuery.js';
 
 const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
 const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
@@ -13,10 +13,10 @@ window.onhashchange = () => {
 }
 
 const loadParametersAndCompareBooks = () => {
-    const book1 = getBookFromParameter('i1');
-    const book2 = getBookFromParameter('i2');
+    const book1 = getBookFromParameter('leftBook');
+    const book2 = getBookFromParameter('rightBook');
     
-    if (book1.testament === book2.testament) {
+    if (book1 && book2 && book1.testament === book2.testament) {
         showComparison(book1, book2);
     }
 }
@@ -72,9 +72,9 @@ window.document.addEventListener('click', function (e) {
         const [bookName, leftOrRight] = id.split("-");
         console.log([bookName, leftOrRight]);
         if (leftOrRight=='left') {
-            locationFragment.setParameter('i1', bookName);
+            locationFragment.setParameter('leftBook', bookName);
         } else {
-            locationFragment.setParameter('i2', bookName);
+            locationFragment.setParameter('rightBook', bookName);
         }
     
     }

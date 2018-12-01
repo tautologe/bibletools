@@ -30,7 +30,7 @@ class LocationFragment {
         return this.getParameter(key) && this.getParameter(key).length > 0;
     }
     setParameter (key, value) {
-        const query = this.getQuery();
+        const query = this.getQuery() || [];
         query[key] = value;
         this.setQuery(query);
     }
