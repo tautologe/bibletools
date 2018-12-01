@@ -39,7 +39,8 @@ const showComparison = (book1, book2) => {
     fetch(strongVektorsFilename).then(response => response.json()).then(bookVektors => {
         const bookSimilarity = dot_product(bookVektors[book1.index], bookVektors[book2.index]).toPrecision(2);
 
-        const bookTitle = `${book1.name} compared with ${book2.name}: ${bookSimilarity} (${(bookSimilarity * 100).toPrecision(2)}%)`;
+        const bookTitle = `${book1.name} verglichen mit ${book2.name}: ${bookSimilarity} (${(bookSimilarity * 100).toPrecision(2)}%) <br/>
+        Liste der relevantesten gemeinsamen Begriffe (mit Strong-Referenz):`;
 
         document.getElementById('bookTitle').innerHTML = bookTitle;
 
