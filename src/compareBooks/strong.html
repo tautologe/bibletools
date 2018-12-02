@@ -19,42 +19,60 @@
     const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
 
 
+    const locationFragment = new LocationFragment(window);
     const bibleTextRenderer = BibleTextRenderer(window);
     const strongRepo = new StrongRepo(JSONLoader);
 
     const strongDefinitionContainer = document.getElementById('strongDefinitionContainer');
 
-    const strongKey = 'H1'; // read from param
-    strongRepo.getItem(strongKey).then((strongDefinition) => {
-        bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionContainer);
+    window.onhashchange = () => {
+        showStrongInformation();
+    };
 
-        const strongPrefix = strongKey.substring(0,1);
-        const testament = strongPrefix === 'H' ? 'at' : 'nt';
-        const strongVektorsFilename = '/data/strong_vektors_'+testament+'.json';
-        const strongVektorsCountFilename = '/data/strong_vektors_count_'+testament+'.json';
-        const strongIndex = parseInt(strongKey.substring(1));
+    const showStrongInformation = () => {
+        const strongParameter = 'strong';
+        const strongKey = locationFragment.hasParameter(strongParameter) ? locationFragment.getParameter(strongParameter) : 'H1';
+        strongRepo.getItem(strongKey).then((strongDefinition) => {
+            bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionContainer);
 
-        const fetchStrongRelevanceVektor = fetch(strongVektorsFilename).then(response => response.json())
-            .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
-        const fetchStrongCountVektor = fetch(strongVektorsCountFilename).then(response => response.json())
-            .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
+            const strongPrefix = strongKey.substring(0,1);
+            const testament = strongPrefix === 'H' ? 'at' : 'nt';
+            const strongVektorsFilename = '/data/strong_vektors_'+testament+'.json';
+            const strongVektorsCountFilename = '/data/strong_vektors_count_'+testament+'.json';
+            const strongIndex = parseInt(strongKey.substring(1));
 
-        const strongStats = Promise.all([fetchStrongRelevanceVektor, fetchStrongCountVektor]).then(([relevanceVektor, countVektor]) => {
-            const output = relevanceVektor.map((strongRelevance, bookIndex) => {
-                const bookNames = strongPrefix === 'H' ? bookIndexAt : bookIndexNt;
-                const strongCount = countVektor[bookIndex];
-                return [bookNames[bookIndex], strongCount, strongRelevance ? strongRelevance.toPrecision(2) : 0];
-            })
-            
-            output.forEach(([bookName, count, relevance]) => {
-                const html = `<span><b>${bookName}</b> absolut: ${count}; relativ: ${relevance}</span><br />`;
-                document.getElementById('strongStatsContainer').innerHTML += html;
+            const fetchStrongRelevanceVektor = fetch(strongVektorsFilename).then(response => response.json())
+                .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
+            const fetchStrongCountVektor = fetch(strongVektorsCountFilename).then(response => response.json())
+                .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
+
+            const strongStats = Promise.all([fetchStrongRelevanceVektor, fetchStrongCountVektor]).then(([relevanceVektor, countVektor]) => {
+                const output = relevanceVektor.map((strongRelevance, bookIndex) => {
+                    const bookNames = strongPrefix === 'H' ? bookIndexAt : bookIndexNt;
+                    const strongCount = countVektor[bookIndex];
+                    return [bookNames[bookIndex], strongCount, strongRelevance ? strongRelevance.toPrecision(2) : 0];
+                })
+                
+                document.getElementById('strongStatsContainer').innerHTML = '';
+                output.forEach(([bookName, count, relevance]) => {
+                    const html = `<span><b>${bookName}</b> absolut: ${count}; relativ: ${relevance}</span><br />`;
+                    document.getElementById('strongStatsContainer').innerHTML += html;
+                });
+
+                return output;
             });
-
-            return output;
+        }).catch(err => {
+            document.getElementById('strongDefinitionContainer').innerHTML = `No entry found for ${strongKey}. (${err})`;
         });
-    });
+    
+    }
 
+
+    showStrongInformation();
+
+    
+    
+    
     
     </script>
 </body>
