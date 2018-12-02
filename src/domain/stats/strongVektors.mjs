@@ -29,5 +29,5 @@ const createVektors = (strong_count_per_book, stopWords) => {
 };
 
 export {
-    createVektors
+    createVektors, createSparseMatrix
 };

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {createVektors} from './domain/stats/strongVektors';
+import {createVektors, createSparseMatrix} from './domain/stats/strongVektors';
 import {createSimilarityMatrixFromVektors} from './domain/stats/similarity';
 import {displayAsTable} from './matrixToHtml';
 
@@ -34,6 +34,12 @@ const stopWords = ["G2532","G846","G1519","G1151","G3756","G2192", "G1161",
 fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
     const strong_counts_at = JSON.parse(contents).slice(0, 39);
     const strong_counts_nt = JSON.parse(contents).slice(39);
+
+    const strongVektorsCount_at = createSparseMatrix(strong_counts_at, []);
+    const strongVektorsCount_nt = createSparseMatrix(strong_counts_nt, []);
+    writeToFileAsJson("data/strong_vektors_count_at.json", strongVektorsCount_at);
+    writeToFileAsJson("data/strong_vektors_count_nt.json", strongVektorsCount_nt);
+
     const strong_normalized_at = createVektors(strong_counts_at, stopWords);
     const strong_normalized_nt = createVektors(strong_counts_nt, stopWords);
 
