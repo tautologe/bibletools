@@ -4,7 +4,7 @@ const createSparseMatrix = (strong_count_per_book, stopWords) => {
         strong_matrix_sparse[book_index] = []; 
         book.strongs.forEach(strong => {
             if (!stopWords.includes(strong.key)) {
-                strong_matrix_sparse[book_index][strong.key.substring(1)] = strong.value
+                strong_matrix_sparse[book_index][strong.key.substring(1)] = parseInt(strong.value)
             }
         });
     });
