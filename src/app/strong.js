@@ -1,3 +1,4 @@
+/* global window, fetch, document */
 import {LocationFragment} from '../util/fragmentQuery.js';
 import StrongRepo from '../repo/StrongRepo.js';
 import {JSONLoader} from '../util/jsonLoader.js';
@@ -5,7 +6,6 @@ import {BibleTextRenderer} from '../render.js';
 
 const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
 const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
-
 
 const locationFragment = new LocationFragment(window);
 const bibleTextRenderer = BibleTextRenderer(window);
@@ -34,7 +34,7 @@ const showStrongInformation = () => {
         const fetchStrongCountVektor = fetch(strongVektorsCountFilename).then(response => response.json())
             .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
 
-        const strongStats = Promise.all([fetchStrongRelevanceVektor, fetchStrongCountVektor]).then(([relevanceVektor, countVektor]) => {
+        Promise.all([fetchStrongRelevanceVektor, fetchStrongCountVektor]).then(([relevanceVektor, countVektor]) => {
             const output = relevanceVektor.map((strongRelevance, bookIndex) => {
                 const bookNames = strongPrefix === 'H' ? bookIndexAt : bookIndexNt;
                 const strongCount = countVektor[bookIndex];
