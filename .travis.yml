@@ -18,15 +18,11 @@ addons:
 #    - libsaxonb-java
 script:
 #- provision/fetchBible.sh
-#- ls -la *
 - yarn run eslint src/
 - yarn test
-#- yarn run webpack
-#- ls -la demo/*
+- yarn run webpack
 #- npm run provision
-#- lftp -e 'set dns:order "inet inet6"; mirror -R demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
-#- lftp -e 'set dns:order "inet inet6"; mirror -R dist/demo /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
-- lftp -e 'set dns:order "inet inet6"; mirror -R src /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
+- lftp -e 'set dns:order "inet inet6"; mirror -R dist /; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
 - lftp -e 'set dns:order "inet inet6"; mirror -R data /data; quit' -u $FTP_USER,$FTP_PASSWORD $FTP_URL
 sudo: false
 #services:
