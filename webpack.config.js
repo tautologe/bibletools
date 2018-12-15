@@ -1,12 +1,16 @@
-var path = require('path');
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry: [
-    './src/app'
-  ],
+  entry: {
+    index: './src/index.js',
+    compareBooks: './src/app/compareBooks.js',
+    strong: './src/app/strong.js',
+    chart: './src/chart.js'
+  },
   output: {
       publicPath: '/',
-      filename: 'demo/bundle.js'
+      filename: '[name].js'
   },
   devtool: 'source-map',
   module: {
@@ -17,5 +21,11 @@ module.exports = {
         loader: 'babel-loader'
       }
     ]
-  }
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: './src/**/*.html', to: '.', flatten: true },
+      { from: './src/style.css', to: '.', flatten: true }
+    ])
+  ]
 };

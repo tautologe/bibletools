@@ -1,6 +1,6 @@
 import fs from 'fs';
-import {createVektors, createSparseMatrix} from './domain/stats/strongVektors';
-import {createSimilarityMatrixFromVektors} from './domain/stats/similarity';
+import {createVektors, createSparseMatrix} from '../../domain/stats/strongVektors';
+import {createSimilarityMatrixFromVektors} from '../../domain/stats/similarity';
 import {displayAsTable} from './matrixToHtml';
 
 const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
