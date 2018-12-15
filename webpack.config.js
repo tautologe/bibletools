@@ -5,8 +5,7 @@ module.exports = {
   entry: {
     index: './src/index.js',
     compareBooks: './src/app/compareBooks.js',
-    strong: './src/app/strong.js',
-    chart: './src/chart.js'
+    strong: './src/app/strong.js'
   },
   output: {
       publicPath: '/',

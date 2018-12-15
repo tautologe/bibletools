@@ -3,6 +3,7 @@ import {LocationFragment} from '../util/fragmentQuery.js';
 import StrongRepo from '../repo/StrongRepo.js';
 import {JSONLoader} from '../util/jsonLoader.js';
 import {BibleTextRenderer} from '../render.js';
+import Chart from 'chart.js';
 
 const bookIndexAt = ["Gen","Ex","Lev","Num","Dtn","Jos","Ri","Rut","1 Sam","2 Sam","1 Kön","2 Kön","1 Chr","2 Chr","Esra","Neh","Est","Ijob","Ps","Spr","Koh","Hld","Jes","Jer","Klgl","Ez","Dan","Hos","Joel","Am","Obd","Jona","Mi","Nah","Hab","Zef","Hag","Sach","Mal"]
 const bookIndexNt = ["Mt","Mk","Lk","Joh","Apg","Röm","1 Kor","2 Kor","Gal","Eph","Phil","Kol","1 Thess","2 Thess","1 Tim","2 Tim","Tit","Phlm","Hebr","Jak","1 Petr","2 Petr","1 Joh","2 Joh","3 Joh","Jud","Offb"]
@@ -12,6 +13,7 @@ const bibleTextRenderer = BibleTextRenderer(window);
 const strongRepo = new StrongRepo(JSONLoader);
 
 const strongDefinitionContainer = document.getElementById('strongDefinitionContainer');
+var ctx = document.getElementById("myChart").getContext("2d");
 
 window.onhashchange = () => {
     showStrongInformation();
@@ -35,6 +37,7 @@ const showStrongInformation = () => {
             .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
 
         Promise.all([fetchStrongRelevanceVektor, fetchStrongCountVektor]).then(([relevanceVektor, countVektor]) => {
+            console.log(fetchStrongRelevanceVektor);
             const output = relevanceVektor.map((strongRelevance, bookIndex) => {
                 const bookNames = strongPrefix === 'H' ? bookIndexAt : bookIndexNt;
                 const strongCount = countVektor[bookIndex];
@@ -49,6 +52,31 @@ const showStrongInformation = () => {
 
             return output;
         });
+
+        fetchStrongRelevanceVektor.then((countVektor) => {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: strongPrefix === 'H' ? bookIndexAt : bookIndexNt,
+                    datasets: [{
+                        label: `Relative Häufigkeit von ${strongDefinition.transliteration}`,
+                        data: countVektor,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+
     }).catch(err => {
         document.getElementById('strongDefinitionContainer').innerHTML = `No entry found for ${strongKey}. (${err})`;
     });
