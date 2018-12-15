@@ -52,6 +52,6 @@ fs.readFile('data/strong_count_per_book.json', 'utf8', function(err, contents) {
     writeToFileAsJson("data/matrix_at.json", similarity_matrix_at);
     writeToFileAsJson("data/matrix_nt.json", similarity_matrix_nt);
 
-    writeToFile("data/matrix_at.html", displayAsTable(similarity_matrix_at, bookIndexAt));
-    writeToFile("data/matrix_nt.html", displayAsTable(similarity_matrix_nt, bookIndexNt));
+    writeToFile("src/app/matrix_at.html", displayAsTable(similarity_matrix_at, bookIndexAt));
+    writeToFile("src/app/matrix_nt.html", displayAsTable(similarity_matrix_nt, bookIndexNt));
 });
