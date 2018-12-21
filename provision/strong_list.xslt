@@ -21,7 +21,8 @@
         <xsl:text>"title_strongs": "</xsl:text><xsl:value-of select="$strongDictItem/title" /><xsl:text>",&#xa;</xsl:text>
         <xsl:text>"transliteration": "</xsl:text><xsl:value-of select="$strongDictItem/transliteration" /><xsl:text>",&#xa;</xsl:text>
         <xsl:text>"germanDescription": [</xsl:text><xsl:apply-templates select="./description/title" /><xsl:text>],&#xa;</xsl:text>
-        <xsl:text>"englishDescription": [</xsl:text><xsl:apply-templates select="$strongDictItem/description" /><xsl:text>]&#xa;</xsl:text>
+        <xsl:text>"englishDescription": [</xsl:text><xsl:apply-templates select="$strongDictItem/description" /><xsl:text>],&#xa;</xsl:text>
+        <xsl:text>"numberOfOccurrences": </xsl:text><xsl:value-of select="count(./description/reflink)" /><xsl:text>&#xa;</xsl:text>
         <xsl:text>}</xsl:text>
         <xsl:if test="count(following-sibling::item[.]) > 0"><xsl:text>,</xsl:text></xsl:if>
     </xsl:template>

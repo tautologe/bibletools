@@ -1,0 +1,29 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="style.css" rel="stylesheet" />
+</head>
+<body>
+    <main>
+        <h2>Strong Übersicht (über 500 Vorkommen in der Bibel):</h2>
+        <section id="stronglist"></section>
+    </main>
+    <script type="module">
+        fetch('/data/stronglist.json').then(response => response.json()).then((stronglist) => {
+            const topStrongs = stronglist
+                .filter(strong => strong.numberOfOccurrences > 500)
+                .sort((a, b)=> a.numberOfOccurrences < b.numberOfOccurrences);
+
+            const strongDefinitionTemplate = (strong) => `<div>
+                <h3>${strong.transliteration} 
+                    <small><a href="strong.html#strong=${strong.id}">(${strong.id}: ${strong.title_strongs})</a></small>: 
+                    ${strong.germanDescription.slice(0,3).join()}; Vorkommen: ${strong.numberOfOccurrences}</h3>
+                <p>${strong.englishDescription}</p>
+            </div>`;
+
+            const listHTML = topStrongs.map(strong => strongDefinitionTemplate(strong)).join("");
+            document.getElementById("stronglist").innerHTML = listHTML;
+        });
+    </script>
+</body>
+</html>
