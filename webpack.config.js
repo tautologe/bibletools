@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     index: './src/index.js',
     compareBooks: './src/app/compareBooks.js',
+    compareStrongs: './src/app/compareStrongs.js',
     strong: './src/app/strong.js'
   },
   output: {

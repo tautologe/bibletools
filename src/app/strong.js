@@ -1,4 +1,4 @@
-/* global window, fetch, document */
+/* global window, document */
 import {LocationFragment} from '../util/fragmentQuery.js';
 import StrongRepo from '../repo/StrongRepo.js';
 import {JSONLoader} from '../util/jsonLoader.js';
@@ -22,38 +22,12 @@ window.onhashchange = () => {
 const showStrongInformation = () => {
     const strongParameter = 'strong';
     const strongKey = locationFragment.hasParameter(strongParameter) ? locationFragment.getParameter(strongParameter) : 'H1';
+    const strongPrefix = strongKey.substring(0,1);
+
     strongRepo.getItem(strongKey).then((strongDefinition) => {
         bibleTextRenderer.displayStrongDefinition(strongDefinition, strongDefinitionContainer);
 
-        const strongPrefix = strongKey.substring(0,1);
-        const testament = strongPrefix === 'H' ? 'at' : 'nt';
-        const strongVektorsFilename = '/data/strong_vektors_'+testament+'.json';
-        const strongVektorsCountFilename = '/data/strong_vektors_count_'+testament+'.json';
-        const strongIndex = parseInt(strongKey.substring(1));
-
-        const fetchStrongRelevanceVektor = fetch(strongVektorsFilename).then(response => response.json())
-            .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
-        const fetchStrongCountVektor = fetch(strongVektorsCountFilename).then(response => response.json())
-            .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
-
-        Promise.all([fetchStrongRelevanceVektor, fetchStrongCountVektor]).then(([relevanceVektor, countVektor]) => {
-            console.log(fetchStrongRelevanceVektor);
-            const output = relevanceVektor.map((strongRelevance, bookIndex) => {
-                const bookNames = strongPrefix === 'H' ? bookIndexAt : bookIndexNt;
-                const strongCount = countVektor[bookIndex];
-                return [bookNames[bookIndex], strongCount, strongRelevance ? strongRelevance.toPrecision(2) : 0];
-            })
-            
-            document.getElementById('strongStatsContainer').innerHTML = '';
-            output.forEach(([bookName, count, relevance]) => {
-                const html = `<span><b>${bookName}</b> absolut: ${count}; relativ: ${relevance}</span><br />`;
-                document.getElementById('strongStatsContainer').innerHTML += html;
-            });
-
-            return output;
-        });
-
-        fetchStrongRelevanceVektor.then((countVektor) => {
+        strongRepo.getBookVektors(strongKey).then(([relevanceVektor, countVektor]) => {
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -75,8 +49,21 @@ const showStrongInformation = () => {
                     }
                 }
             });
-        });
 
+            const output = relevanceVektor.map((strongRelevance, bookIndex) => {
+                const bookNames = strongPrefix === 'H' ? bookIndexAt : bookIndexNt;
+                const strongCount = countVektor[bookIndex];
+                return [bookNames[bookIndex], strongCount, strongRelevance ? strongRelevance.toPrecision(2) : 0];
+            });
+
+            document.getElementById('strongStatsContainer').innerHTML = '';
+            output.forEach(([bookName, count, relevance]) => {
+                const html = `<span><b>${bookName}</b> absolut: ${count}; relativ: ${relevance}</span><br />`;
+                document.getElementById('strongStatsContainer').innerHTML += html;
+            });
+
+            return output;
+        });
     }).catch(err => {
         document.getElementById('strongDefinitionContainer').innerHTML = `No entry found for ${strongKey}. (${err})`;
     });

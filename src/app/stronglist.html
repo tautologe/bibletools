@@ -9,16 +9,31 @@
         <section id="stronglist"></section>
     </main>
     <script type="module">
+        const getStrongPrefix = strongKey => strongKey.substring(0,1);
+        const rawStrongNumber = strongKey => parseInt(strongKey.substring(1));
+        const sortByStrongKey = (a, b) => {
+            if (getStrongPrefix(a.id) > getStrongPrefix(b.id)) {
+                return -1;
+            } else if (getStrongPrefix(a.id) < getStrongPrefix(b.id)) {
+                return 1;
+            } else {
+                return rawStrongNumber(a.id) > rawStrongNumber(b.id);
+            }
+        };
+
         fetch('/data/stronglist.json').then(response => response.json()).then((stronglist) => {
+            console.log(stronglist);
             const topStrongs = stronglist
-                .filter(strong => strong.numberOfOccurrences > 500)
-                .sort((a, b)=> a.numberOfOccurrences < b.numberOfOccurrences);
+                //.filter(strong => strong.numberOfOccurrences > 500)
+                //.sort((a, b)=> a.numberOfOccurrences < b.numberOfOccurrences);
+                //.sort((a, b) => parseInt(a.id.substring(1)) > parseInt(b.id.substring(1)));
+                .sort(sortByStrongKey);
 
             const strongDefinitionTemplate = (strong) => `<div>
-                <h3>${strong.transliteration} 
+                <div>${strong.transliteration} 
                     <small><a href="strong.html#strong=${strong.id}">(${strong.id}: ${strong.title_strongs})</a></small>: 
-                    ${strong.germanDescription.slice(0,3).join()}; Vorkommen: ${strong.numberOfOccurrences}</h3>
-                <p>${strong.englishDescription}</p>
+                    ${strong.germanDescription.slice(0,3).join()}; Vorkommen: ${strong.numberOfOccurrences}</div>
+                <p style="display:none">${strong.englishDescription}</p>
             </div>`;
 
             const listHTML = topStrongs.map(strong => strongDefinitionTemplate(strong)).join("");

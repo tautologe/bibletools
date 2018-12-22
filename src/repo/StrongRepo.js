@@ -1,3 +1,4 @@
+/* global fetch */
 import {Reference} from '../domain/reference.js'
 import {StrongDefinition} from '../domain/strongs.js'
 
@@ -36,6 +37,25 @@ class StrongRepo {
                 })
             );
         });
+    }
+
+    /**
+     * returns Promise of two vektors with relevance and total count of the given strong item for each book
+     * @param {StrongKey} key like H1234
+     */
+    getBookVektors(key) {
+        const strongPrefix = key.substring(0,1);
+        const testament = strongPrefix === 'H' ? 'at' : 'nt';
+        const strongVektorsFilename = '/data/strong_vektors_'+testament+'.json';
+        const strongVektorsCountFilename = '/data/strong_vektors_count_'+testament+'.json';
+        const strongIndex = parseInt(key.substring(1));
+
+        const fetchStrongRelevanceVektor = fetch(strongVektorsFilename).then(response => response.json())
+            .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
+        const fetchStrongCountVektor = fetch(strongVektorsCountFilename).then(response => response.json())
+            .then(bookVektors => bookVektors.map(bookVektor => bookVektor[strongIndex]));
+
+        return Promise.all([fetchStrongRelevanceVektor, fetchStrongCountVektor]);
     }
 }
 
